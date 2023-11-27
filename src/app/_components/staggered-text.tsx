@@ -45,7 +45,8 @@ const StaggeredText = ({
       style={{ overflow: "hidden", display: "flex", fontSize: "1.1rem" }}
       variants={container}
       initial="hidden"
-      animate="visible"
+      whileInView="visible"
+      viewport={{ once: true }}
       className={className}
     >
       {words.map((word, index) => (
