@@ -28,8 +28,11 @@ export default async function Home() {
           {session ? "Go to dashboard" : "Get started"}
         </Link>
         <ScrollText />
+        <hr className={`absolute bottom-0 w-full border-base-content/20`} />
       </div>
-      <div className={`flex min-h-screen flex-col items-center justify-center`}>
+      <div
+        className={`relative flex min-h-screen flex-col items-center justify-center`}
+      >
         <h3
           className={`mb-3 flex items-center justify-center text-4xl font-bold hover:cursor-default`}
         >
@@ -41,6 +44,7 @@ export default async function Home() {
             className={`mb-8 hover:cursor-default`}
           />
         </h4>
+        <hr className={`absolute bottom-0 w-full border-base-content/20`} />
       </div>
       <div className={`flex min-h-screen flex-col items-center justify-center`}>
         <h3
