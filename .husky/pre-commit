@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-prettier --check .
+prettier --write "**/*.{js,ts,tsx,jsx,mdx}"
 eslint --fix --ext .js,.ts,.tsx,.jsx .
+git add -A .

@@ -1,7 +1,6 @@
 import { getServerAuthSession } from "~/server/auth";
 import Link from "next/link";
 import StaggeredText from "~/app/_components/staggered-text";
-import { FaAngleDown } from "react-icons/fa";
 import ScrollText from "~/app/_components/scroll-text";
 
 export default async function Home() {
