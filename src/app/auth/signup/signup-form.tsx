@@ -1,9 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { FaEye } from "react-icons/fa";
 import { TbLoader3 } from "react-icons/tb";
+import { api } from "~/trpc/react";
+import bcrypt from "bcryptjs";
+import { useRouter } from "next/navigation";
+
+const salt = bcrypt.genSaltSync(10);
 
 const checkEmail = (email: string) => {
   return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
@@ -39,7 +44,26 @@ export default function SignUpForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const createUser = api.user.create.useMutation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (createUser.isSuccess) {
+      toast.success("Account created successfully!");
+      setLoading(false);
+
+      router.push("/auth/signin");
+    }
+
+    if (createUser.isError) {
+      toast.error(
+        "An error occurred while creating your account. Please try again later.",
+      );
+      return;
+    }
+  }, [createUser.isSuccess, createUser.isError, createUser.error]);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
@@ -70,7 +94,14 @@ export default function SignUpForm() {
 
     setLoading(true);
 
-    toast.success("Account created successfully.");
+    const name = `${firstName} ${lastName}`;
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    createUser.mutate({
+      name,
+      email,
+      password: hashedPassword,
+    });
   };
 
   return (

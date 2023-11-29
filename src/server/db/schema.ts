@@ -21,11 +21,12 @@ export const mysqlTable = mysqlTableCreator((name) => `tasqboard_${name}`);
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("emailVerified", {
     mode: "date",
     fsp: 3,
   }).default(sql`CURRENT_TIMESTAMP(3)`),
+  password: varchar("password", { length: 255 }),
   image: varchar("image", { length: 255 }),
 });
 

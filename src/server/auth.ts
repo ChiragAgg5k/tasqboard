@@ -5,10 +5,13 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
 import { mysqlTable } from "~/server/db/schema";
+import { api } from "~/trpc/server";
+import bycrpt from "bcryptjs";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -52,6 +55,42 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials) {
+          return null;
+        }
+
+        const user = await api.user.fetch.query({
+          email: credentials.email,
+        });
+
+        if (!user[0]) {
+          return null;
+        }
+
+        if (user[0].password === null) {
+          return null;
+        }
+
+        const isValid = await bycrpt.compare(
+          credentials.password,
+          user[0].password,
+        );
+
+        if (!isValid) {
+          return null;
+        }
+
+        return user[0];
+      },
+    }),
+
     /**
      * ...add more providers here.
      *
