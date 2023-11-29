@@ -50,7 +50,9 @@ export default function SignUpForm() {
 
   useEffect(() => {
     if (createUser.isSuccess) {
-      toast.success("Account created successfully!");
+      toast.success(
+        "Account created successfully! Please check your email for an email verification link.",
+      );
       setLoading(false);
 
       router.push("/auth/signin");
@@ -95,11 +97,11 @@ export default function SignUpForm() {
 
     setLoading(true);
 
-    const name = `${firstName} ${lastName}`;
     const hashedPassword = bcrypt.hashSync(password, salt);
 
     createUser.mutate({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
     });

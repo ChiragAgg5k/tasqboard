@@ -50,6 +50,9 @@ export default function SignInForm() {
           {error === "InvalidPassword" && (
             <p>Invalid password. Please try again.</p>
           )}
+          {error === "EmailNotVerified" && (
+            <p>Please verify your email address before signing in.</p>
+          )}
         </div>
       ) : (
         <p className={`text-center text-sm`}>
@@ -94,7 +97,11 @@ export default function SignInForm() {
           <FaEye />
         </div>
       </div>
-      <button className={`btn btn-accent w-full`} type={`submit`}>
+      <button
+        className={`btn btn-accent w-full`}
+        type={`submit`}
+        disabled={loading}
+      >
         <TbLoader3
           className={`mr-2 inline-block animate-spin text-xl ${
             loading ? "" : "hidden"

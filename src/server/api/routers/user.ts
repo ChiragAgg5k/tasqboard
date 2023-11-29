@@ -1,26 +1,63 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { z } from "zod";
-import { users } from "~/server/db/schema";
+import { users, verificationTokens } from "~/server/db/schema";
 import { v4 } from "uuid";
 import { eq } from "drizzle-orm";
+import { Resend } from "resend";
+import { env } from "~/env";
+import { VerificationEmail } from "~/app/_components/verification-email";
+import bycrpt from "bcryptjs";
+
+const resend = new Resend(env.RESEND_API_KEY);
 
 export const userRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        name: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
         email: z.string().email(),
         password: z.string().min(8),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.insert(users).values({
-        id: v4(),
-        name: input.name,
-        email: input.email,
-        password: input.password,
-        emailVerified: null,
-      });
+      const userId = v4();
+      const hashToken = bycrpt.hashSync(userId, 10);
+
+      try {
+        return await Promise.all([
+          // Insert into users table
+          ctx.db.insert(users).values({
+            id: userId,
+            name: input.firstName + " " + input.lastName,
+            email: input.email,
+            password: input.password,
+            emailVerified: null,
+          }),
+
+          // Insert into verificationTokens table
+          ctx.db.insert(verificationTokens).values({
+            identifier: userId,
+            token: hashToken,
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3), // 3 days
+          }),
+
+          // Send verification email
+          resend.emails.send({
+            from: "Tasqboard <chirag@tasqboard.co>",
+            to: input.email,
+            subject: "Verify your email & get started with Tasqboard",
+            react: VerificationEmail({
+              firstName: input.firstName,
+              verificationToken: hashToken,
+              domainUrl: env.NEXTAUTH_URL,
+            }),
+            html: "<h1>Verify your email</h1>",
+          }),
+        ]);
+      } catch (e) {
+        console.log(e);
+      }
     }),
 
   fetch: publicProcedure
@@ -35,5 +72,61 @@ export const userRouter = createTRPCRouter({
         .from(users)
         .where(eq(users.email, input.email))
         .limit(1);
+    }),
+
+  verify: publicProcedure
+    .input(
+      z.object({
+        token: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const token = await ctx.db
+        .select()
+        .from(verificationTokens)
+        .where(eq(verificationTokens.token, input.token))
+        .limit(1);
+
+      if (token[0] === undefined) {
+        return {
+          name: "TokenNotFound",
+          code: "404",
+          message: "Token not found",
+        };
+      }
+
+      if (token[0].expires < new Date()) {
+        return {
+          name: "TokenExpired",
+          code: "404",
+          message: "Token expired",
+        };
+      }
+
+      const user = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.id, token[0].identifier))
+        .limit(1);
+
+      if (user[0] === undefined) {
+        return {
+          name: "UserNotFound",
+          code: "404",
+          message: "User not found",
+        };
+      }
+
+      await ctx.db
+        .update(users)
+        .set({ emailVerified: new Date() })
+        .where(eq(users.id, token[0].identifier));
+
+      return {
+        name: "Success",
+        code: "200",
+        message: "User verified",
+        data: user[0],
+      };
     }),
 });
