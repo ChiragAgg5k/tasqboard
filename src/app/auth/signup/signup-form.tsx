@@ -111,7 +111,8 @@ export default function SignUpForm() {
     <form className={`w-full space-y-5`} onSubmit={handleSubmit}>
       <h1 className={`text-center text-2xl font-bold`}>Sign Up</h1>
       <p className={`text-center text-sm`}>
-        Welcome to Tasqboard! Create an account to get started.
+        Welcome to Tasqboard! Ready to get 100% more productive? (not
+        guaranteed)
       </p>
       <div className={`flex`}>
         <input
@@ -135,7 +136,7 @@ export default function SignUpForm() {
       </div>
       <input
         className={`input input-bordered w-full hover:input-accent`}
-        placeholder={`Email`}
+        placeholder={`example@domain.com`}
         type={`email`}
         onChange={(e) => setEmail(e.target.value)}
         id={`email`}
@@ -149,7 +150,7 @@ export default function SignUpForm() {
       <div className={`relative w-full`}>
         <input
           className={`input input-bordered w-full hover:input-accent`}
-          placeholder={`Password`}
+          placeholder={`A strong password`}
           type={`${showPassword ? "text" : "password"}`}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -209,7 +210,7 @@ export default function SignUpForm() {
       )}
       <input
         className={`input input-bordered w-full hover:input-accent`}
-        placeholder={`Confirm Password`}
+        placeholder={`Confirm that strong password`}
         type={showPassword ? "text" : "password"}
         id={`confirm-password`}
         name={`confirm-password`}

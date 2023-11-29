@@ -91,7 +91,7 @@ export const userRouter = createTRPCRouter({
         return {
           name: "TokenNotFound",
           code: "404",
-          message: "Token not found",
+          message: "Token not found ❌",
         };
       }
 
@@ -99,7 +99,7 @@ export const userRouter = createTRPCRouter({
         return {
           name: "TokenExpired",
           code: "404",
-          message: "Token expired",
+          message: "Token expired ❌",
         };
       }
 
@@ -113,7 +113,17 @@ export const userRouter = createTRPCRouter({
         return {
           name: "UserNotFound",
           code: "404",
-          message: "User not found",
+          message: "User not found ❌",
+        };
+      }
+
+      // check if user is already verified
+      if (user[0].emailVerified !== null) {
+        return {
+          name: "UserAlreadyVerified",
+          code: "404",
+          message: "User already verified ✅",
+          data: user[0],
         };
       }
 
@@ -125,7 +135,7 @@ export const userRouter = createTRPCRouter({
       return {
         name: "Success",
         code: "200",
-        message: "User verified",
+        message: "User verified successfully ✅",
         data: user[0],
       };
     }),

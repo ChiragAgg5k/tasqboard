@@ -3,12 +3,13 @@
 import { type FormEvent, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
 import { MdError } from "react-icons/md";
 import { TbLoader3 } from "react-icons/tb";
+import { FaSignInAlt } from "react-icons/fa";
 
 export default function SignInForm() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function SignInForm() {
     await signIn("credentials", {
       email,
       password,
-      callbackUrl: `/`,
+      callbackUrl: `/dashboard`,
     });
   };
 
@@ -56,7 +57,7 @@ export default function SignInForm() {
         </div>
       ) : (
         <p className={`text-center text-sm`}>
-          Welcome back to Tasqboard! Sign in to continue.
+          Welcome back! Ready to continue where you left off?
         </p>
       )}
       <input
@@ -102,12 +103,15 @@ export default function SignInForm() {
         type={`submit`}
         disabled={loading}
       >
+        Sign In
         <TbLoader3
           className={`mr-2 inline-block animate-spin text-xl ${
             loading ? "" : "hidden"
           }`}
         />
-        Sign In
+        <FaSignInAlt
+          className={`mr-2 inline-block ${loading ? "hidden" : ""}`}
+        />
       </button>
       <button
         className={`btn w-full`}
