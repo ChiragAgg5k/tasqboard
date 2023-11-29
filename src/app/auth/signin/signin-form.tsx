@@ -3,7 +3,7 @@
 import { type FormEvent, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
