@@ -22,7 +22,7 @@ export default async function Home() {
           className={`mb-8 hover:cursor-default`}
         />
         <Link
-          href={session ? "/dashboard" : "/api/auth/signin"}
+          href={session ? "/dashboard" : "/auth/signin"}
           className={`btn btn-outline w-full max-w-sm`}
         >
           {session ? "Go to dashboard" : "Get started"}

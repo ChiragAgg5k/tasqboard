@@ -7,6 +7,7 @@ import { TbLoader3 } from "react-icons/tb";
 import { api } from "~/trpc/react";
 import bcrypt from "bcryptjs";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -105,7 +106,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <form className={`w-full space-y-6`} onSubmit={handleSubmit}>
+    <form className={`w-full space-y-5`} onSubmit={handleSubmit}>
       <h1 className={`text-center text-2xl font-bold`}>Sign Up</h1>
       <p className={`text-center text-sm`}>
         Welcome to Tasqboard! Create an account to get started.
@@ -138,7 +139,7 @@ export default function SignUpForm() {
         id={`email`}
         name={`email`}
       />
-      {email.length > 0 && !checkEmail(email) && (
+      {email.length > 5 && !checkEmail(email) && (
         <p className={`text-xs text-secondary`}>
           Please enter a valid email address.
         </p>
@@ -207,7 +208,7 @@ export default function SignUpForm() {
       <input
         className={`input input-bordered w-full hover:input-accent`}
         placeholder={`Confirm Password`}
-        type={`password`}
+        type={showPassword ? "text" : "password"}
         id={`confirm-password`}
         name={`confirm-password`}
         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -241,9 +242,9 @@ export default function SignUpForm() {
 
       <p className={`text-center text-sm`}>
         Already have an account?{" "}
-        <a href="#" className={`link link-accent`}>
+        <Link href="/auth/signin" className={`link link-accent`}>
           Sign in
-        </a>
+        </Link>
         .
       </p>
     </form>

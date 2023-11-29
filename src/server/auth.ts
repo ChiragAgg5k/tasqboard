@@ -59,11 +59,11 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user[0]) {
-          throw new Error("No user found");
+          throw new Error("UserNotFound");
         }
 
         if (user[0].password === null) {
-          throw new Error("No password found");
+          throw new Error("PasswordNotSet");
         }
 
         const isValid = await bycrpt.compare(
@@ -72,7 +72,7 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (!isValid) {
-          throw new Error("Invalid password");
+          throw new Error("InvalidPassword");
         }
 
         return user[0];
