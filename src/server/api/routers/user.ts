@@ -48,9 +48,8 @@ export const userRouter = createTRPCRouter({
             to: input.email,
             subject: "Verify your email & get started with Tasqboard",
             react: VerificationEmail({
-              firstName: input.firstName,
               verificationToken: hashToken,
-              domainUrl: env.NEXTAUTH_URL,
+              baseUrl: env.NEXTAUTH_URL,
             }),
             html: "<h1>Verify your email</h1>",
           }),
@@ -96,6 +95,10 @@ export const userRouter = createTRPCRouter({
       }
 
       if (token[0].expires < new Date()) {
+        await ctx.db
+          .delete(verificationTokens)
+          .where(eq(verificationTokens.token, input.token));
+
         return {
           name: "TokenExpired",
           code: "404",
@@ -127,10 +130,16 @@ export const userRouter = createTRPCRouter({
         };
       }
 
-      await ctx.db
-        .update(users)
-        .set({ emailVerified: new Date() })
-        .where(eq(users.id, token[0].identifier));
+      await Promise.all([
+        ctx.db
+          .update(users)
+          .set({ emailVerified: new Date() })
+          .where(eq(users.id, token[0].identifier)),
+
+        ctx.db
+          .delete(verificationTokens)
+          .where(eq(verificationTokens.token, input.token)),
+      ]);
 
       return {
         name: "Success",
