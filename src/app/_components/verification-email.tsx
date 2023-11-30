@@ -1,14 +1,11 @@
 import {
   Body,
   Container,
-  Column,
   Head,
   Heading,
   Html,
-  Img,
   Link,
   Preview,
-  Row,
   Section,
   Text,
   Button,
@@ -35,7 +32,7 @@ export const VerificationEmail = ({
         </Text>
 
         <Button
-          href={`${baseUrl}/verify-email?token=${verificationToken}`}
+          href={`${baseUrl}/auth/verify-email?token=${verificationToken}`}
           style={{
             backgroundColor: "#000",
             color: "#ffffff",
@@ -103,18 +100,6 @@ const footerText = {
 const footerLink = {
   color: "#b7b7b7",
   textDecoration: "underline",
-};
-
-const footerLogos = {
-  marginBottom: "32px",
-  paddingLeft: "8px",
-  paddingRight: "8px",
-  width: "100%",
-};
-
-const socialMediaIcon = {
-  display: "inline",
-  marginLeft: "32px",
 };
 
 const main = {
