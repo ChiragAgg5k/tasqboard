@@ -17,7 +17,7 @@ export default function ScrollText() {
     <p
       id="scroll-text"
       className={`group fixed bottom-0 w-full pb-4 text-center text-sm text-base-content/50 transition-all duration-200 ease-in-out hover:cursor-default hover:text-base-content ${
-        isVisible ? "opacity-100" : "opacity-0"
+        isVisible ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
     >
       Scroll down for more info{" "}

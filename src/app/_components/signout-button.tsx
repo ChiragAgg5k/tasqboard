@@ -19,13 +19,8 @@ export default function SignOutButton({
     <button
       onClick={async () => {
         await signOut({
-          redirect: false,
+          callbackUrl: "/",
         });
-
-        toast.success("Signed out successfully!");
-
-        router.push("/");
-        router.refresh();
       }}
       className={className}
     >
