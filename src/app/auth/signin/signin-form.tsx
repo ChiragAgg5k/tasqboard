@@ -16,6 +16,7 @@ export default function SignInForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
@@ -43,7 +44,7 @@ export default function SignInForm() {
         <div
           className={`flex items-center justify-start space-x-4 bg-base-200 p-4 text-sm`}
         >
-          <MdError className={`text-4xl`} />
+          <MdError className={`text-2xl`} />
           {error === "UserNotFound" && (
             <p>No account found with that email address.</p>
           )}
@@ -54,6 +55,7 @@ export default function SignInForm() {
           {error === "EmailNotVerified" && (
             <p>Please verify your email address before signing in.</p>
           )}
+          {error === "NotAuthenticated" && <p>Please sign in to continue.</p>}
         </div>
       ) : (
         <p className={`text-center text-sm`}>
@@ -116,14 +118,20 @@ export default function SignInForm() {
       <button
         className={`btn w-full`}
         type={`button`}
+        disabled={googleLoading}
         onClick={async () => {
+          setGoogleLoading(true);
           await signIn("google", {
-            callbackUrl: `/`,
+            callbackUrl: `/dashboard`,
           });
         }}
       >
         Sign In with Google
-        <FaGoogle className={`ml-2`} />
+        {googleLoading ? (
+          <TbLoader3 className={`mr-2 inline-block animate-spin text-xl`} />
+        ) : (
+          <FaGoogle className={`ml-2`} />
+        )}
       </button>
       <p className={`mt-2 text-center text-xs text-gray-500`}>
         By signing in, you agree to our{" "}

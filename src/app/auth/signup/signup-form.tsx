@@ -2,7 +2,7 @@
 
 import { type FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaSignInAlt } from "react-icons/fa";
 import { TbLoader3 } from "react-icons/tb";
 import { api } from "~/trpc/react";
 import bcrypt from "bcryptjs";
@@ -224,12 +224,15 @@ export default function SignUpForm() {
         disabled={loading}
         type={`submit`}
       >
+        Sign Up
         <TbLoader3
           className={`mr-2 inline-block animate-spin text-xl ${
             loading ? "" : "hidden"
           }`}
         />
-        Sign Up
+        <FaSignInAlt
+          className={`mr-2 inline-block ${loading ? "hidden" : ""}`}
+        />
       </button>
       <p className={`mt-2 text-center text-xs text-gray-500`}>
         By signing up, you agree to our{" "}
