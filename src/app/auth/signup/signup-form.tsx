@@ -60,8 +60,10 @@ export default function SignUpForm() {
 
     if (createUser.isError) {
       toast.error(
-        "An error occurred while creating your account. Please try again later.",
+        createUser.error?.message ||
+          "An error occurred. Please try again later.",
       );
+      setLoading(false);
       return;
     }
   }, [createUser.isSuccess, createUser.isError, createUser.error]);

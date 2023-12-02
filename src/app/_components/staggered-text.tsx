@@ -42,7 +42,14 @@ const StaggeredText = ({
 
   return (
     <motion.div
-      style={{ overflow: "hidden", display: "flex", fontSize: "1.1rem" }}
+      style={{
+        overflow: "hidden",
+        display: "flex",
+        fontSize: "1.2rem",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
       variants={container}
       initial="hidden"
       whileInView="visible"

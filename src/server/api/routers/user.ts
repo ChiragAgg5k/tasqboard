@@ -24,6 +24,17 @@ export const userRouter = createTRPCRouter({
       const userId = v4();
       const hashToken = bycrpt.hashSync(userId, 10);
 
+      // check if user already exists
+      const user = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(users.email, input.email))
+        .limit(1);
+
+      if (user[0] !== undefined) {
+        throw new Error("User already exists! Please sign in instead.");
+      }
+
       try {
         return await Promise.all([
           // Insert into users table

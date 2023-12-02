@@ -39,37 +39,39 @@ export default function VerifyEmail() {
 
   return (
     <div className={`flex min-h-screen items-center justify-center`}>
-      {result !== null ? (
-        (result.name === "UserAlreadyVerified" && (
-          <div>
-            <p className={`mb-4`}>Your email has already been verified ✅</p>
-            <Link href={`/auth/signin`} className={`btn btn-accent w-full`}>
-              Sign In
-            </Link>
-          </div>
-        )) ||
-        (result.name === "Success" && (
-          <div>
-            <p className={`mb-4`}>Email verified successfully 🎉</p>
-            <Link href={`/auth/signin`} className={`btn btn-accent w-full`}>
-              Sign In
-            </Link>
-          </div>
-        )) || (
-          <div className={`text-center`}>
-            <p className={`mb-2`}>Something went wrong...</p>
-            <p className={`mb-6`}>{result.message}</p>
-            <Link href={`/`} className={`btn btn-accent w-full`}>
-              Back to home
-            </Link>
-          </div>
-        )
-      ) : (
-        <p>
-          <TbLoader3 className={`text-xl} mr-2 inline-block animate-spin`} />
-          Loading...
-        </p>
-      )}
+      <div className={`rounded-xl bg-base-200 p-8`}>
+        {result !== null ? (
+          (result.name === "UserAlreadyVerified" && (
+            <div>
+              <p className={`mb-4`}>Your email has already been verified ✅</p>
+              <Link href={`/auth/signin`} className={`btn btn-accent w-full`}>
+                Sign In
+              </Link>
+            </div>
+          )) ||
+          (result.name === "Success" && (
+            <div>
+              <p className={`mb-4`}>Email verified successfully 🎉</p>
+              <Link href={`/auth/signin`} className={`btn btn-accent w-full`}>
+                Sign In
+              </Link>
+            </div>
+          )) || (
+            <div className={`text-center`}>
+              <p className={`mb-2`}>Something went wrong...</p>
+              <p className={`mb-6`}>{result.message}</p>
+              <Link href={`/`} className={`btn btn-accent w-full`}>
+                Back to home
+              </Link>
+            </div>
+          )
+        ) : (
+          <p>
+            <TbLoader3 className={`text-xl} mr-2 inline-block animate-spin`} />
+            Loading...
+          </p>
+        )}
+      </div>
     </div>
   );
 }

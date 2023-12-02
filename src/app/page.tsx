@@ -11,25 +11,27 @@ export default async function Home() {
 
   return (
     <main>
-      <div className="flex min-h-screen flex-col items-center justify-center">
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center">
         <h1
-          className={`mb-3 flex items-center justify-center text-4xl font-bold hover:cursor-default`}
+          className={`mb-4 flex flex-col items-center justify-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default sm:flex-row`}
         >
           Welcome to{" "}
-          <span className={`ml-4 text-5xl text-accent hover:animate-pulse`}>
+          <span className={`ml-4 text-[min(12vw,3.75rem)] text-accent`}>
             TasqBoard
           </span>
         </h1>
         <StaggeredText
-          text={`Manage your tasks with ease and simplicity.`}
+          text={`Manage your tasks with ease and simplicity. . .`}
           className={`mb-8 hover:cursor-default`}
         />
-        <Link
-          href={session ? "/dashboard" : "/auth/signup"}
-          className={`btn btn-outline w-full max-w-sm`}
-        >
-          {session ? "Go to dashboard" : "Get started"}
-        </Link>
+        <div className={`w-full max-w-sm px-4`}>
+          <Link
+            href={session ? "/dashboard" : "/auth/signup"}
+            className={`btn btn-outline w-full`}
+          >
+            {session ? "Go to dashboard" : "Get started"}
+          </Link>
+        </div>
         <ScrollText />
         <hr className={`absolute bottom-0 w-full border-base-content/20`} />
       </div>
@@ -37,7 +39,7 @@ export default async function Home() {
         className={`relative flex min-h-screen flex-col items-center justify-center`}
       >
         <h3
-          className={`mb-3 flex items-center justify-center text-4xl font-bold hover:cursor-default`}
+          className={`mb-3 flex items-center justify-center text-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default`}
         >
           Divide tasks into Boards
         </h3>
@@ -51,7 +53,7 @@ export default async function Home() {
       </div>
       <div className={`flex min-h-screen flex-col items-center justify-center`}>
         <h3
-          className={`mb-3 flex items-center justify-center text-4xl font-bold hover:cursor-default`}
+          className={`mb-3 flex items-center justify-center text-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default`}
         >
           Sync with Google Calendar
         </h3>
