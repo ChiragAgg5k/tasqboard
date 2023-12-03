@@ -5,6 +5,7 @@ import ScrollText from "~/app/_components/scroll-text";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGlobe } from "react-icons/fa";
+import Board from "~/app/_components/board";
 
 export default async function Home() {
   const session = await getServerAuthSession();

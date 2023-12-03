@@ -100,6 +100,9 @@ devDependencies:
   '@types/react':
     specifier: ^18.2.37
     version: 18.2.38
+  '@types/react-beautiful-dnd':
+    specifier: ^13.1.7
+    version: 13.1.7
   '@types/react-dom':
     specifier: ^18.2.15
     version: 18.2.17
@@ -1011,6 +1014,12 @@ packages:
 
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
+
+  /@types/react-beautiful-dnd@13.1.7:
+    resolution: {integrity: sha512-jQZLov9OkD0xRQkqz8/lx66bHYAYv+g4+POBqnH5Jtt/xo4MygzM879Q9sxAiosPBdNj1JYTdbPxDn3dNRYgow==}
+    dependencies:
+      '@types/react': 18.2.38
+    dev: true
 
   /@types/react-dom@18.2.17:
     resolution: {integrity: sha512-rvrT/M7Df5eykWFxn6MYt5Pem/Dbyc1N8Y0S9Mrkw2WFCRiqUgw9P7ul2NpwsXCSM1DVdENzdG9J5SreqfAIWg==}

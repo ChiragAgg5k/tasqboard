@@ -1,5 +1,6 @@
 import { getServerAuthSession } from "~/server/auth";
 import NewBoardButton from "~/app/(pages)/dashboard/new-board";
+import Board from "~/app/_components/board";
 
 export default async function Dashboard() {
   const session = await getServerAuthSession();
@@ -17,6 +18,10 @@ export default async function Dashboard() {
       <div className={`grid grid-cols-3 gap-6`}>
         <NewBoardButton />
       </div>
+
+      <hr className={`my-8 border-base-content/20`} />
+
+      <Board />
     </div>
   );
 }
