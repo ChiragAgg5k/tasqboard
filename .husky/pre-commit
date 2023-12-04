@@ -4,3 +4,4 @@
 prettier --write "**/*.{js,ts,tsx,jsx,mdx}"
 eslint --fix --ext .js,.ts,.tsx,.jsx .
 git add -A .
+npx --no-install commitlint --config commitlint.config.cjs --edit $1

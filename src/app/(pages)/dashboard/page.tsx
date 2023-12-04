@@ -1,6 +1,5 @@
 import { getServerAuthSession } from "~/server/auth";
 import NewBoardButton from "~/app/(pages)/dashboard/new-board";
-import Board from "~/app/_components/board";
 import { api } from "~/trpc/server";
 import Link from "next/link";
 
