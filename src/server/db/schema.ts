@@ -91,3 +91,17 @@ export const verificationTokens = mysqlTable(
     compoundKey: primaryKey(vt.identifier, vt.token),
   }),
 );
+
+export const boards = mysqlTable(
+  "board",
+  {
+    // auto incrementing id
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: varchar("description", { length: 255 }),
+    creatorId: varchar("creatorId", { length: 255 }).notNull(),
+  },
+  (board) => ({
+    creatorIdIdx: index("creatorId_idx").on(board.creatorId),
+  }),
+);

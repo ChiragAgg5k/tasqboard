@@ -47,18 +47,21 @@ export default function Board() {
   };
 
   return (
-    <div className="rounded-md border p-4">
-      {JSON.stringify(groups)}
-      <h1 className="text-center text-2xl font-bold">Example Board</h1>
+    <div className="rounded-md border border-base-content p-4">
+      <h1 className="my-8 text-center text-2xl font-bold">Example Board</h1>
       <DragDropContext onDragEnd={handleDrop}>
         <Droppable droppableId="ROOT" type="group">
           {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {items.map((item, index) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={`max-w-sm rounded-xl border border-base-content/20 p-4`}
+            >
+              {groups.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
                   {(provided) => (
                     <div
-                      className={`my-2 rounded-md border p-4`}
+                      className={`my-2 rounded-md border border-base-content/20 p-4`}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       ref={provided.innerRef}
