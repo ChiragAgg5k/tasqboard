@@ -242,9 +242,9 @@ export default function SignUpForm() {
           Terms of Service
         </a>{" "}
         and{" "}
-        <a href="#" className={`link-base-content link`}>
+        <Link href="/privacy-policy" className={`link-base-content link`}>
           Privacy Policy
-        </a>
+        </Link>
         .
       </p>
 

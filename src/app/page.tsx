@@ -82,7 +82,9 @@ export default async function Home() {
         <nav>
           <header className="footer-title">Legal</header>
           <a className="link-hover link">Terms of use</a>
-          <a className="link-hover link">Privacy policy</a>
+          <Link href={`privacy-policy`} className="link-hover link">
+            Privacy policy
+          </Link>
           <a className="link-hover link">Cookie policy</a>
         </nav>
       </footer>

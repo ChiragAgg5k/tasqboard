@@ -7,7 +7,7 @@ export default async function Navbar() {
   const session = await getServerAuthSession();
 
   return (
-    <div className="navbar fixed z-50 flex items-center justify-between border-b bg-base-100">
+    <div className="navbar fixed z-50 flex items-center justify-between border-b border-base-content/40 bg-base-100">
       <Link className="btn btn-ghost text-xl" href={`/`}>
         Tasqboard
       </Link>

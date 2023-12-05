@@ -6,6 +6,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/app/_components/navbar";
 import { Toaster } from "sonner";
 import { type ReactNode } from "react";
+import NextTopLoader from "nextjs-toploader";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`font-sans ${montserrat.variable}`}>
         <TRPCReactProvider cookies={cookies().toString()}>
           <Navbar />
+          <NextTopLoader showSpinner={false} color="#DA7151" />
           {children}
           <Toaster />
         </TRPCReactProvider>

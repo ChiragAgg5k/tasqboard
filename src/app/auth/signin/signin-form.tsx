@@ -139,9 +139,9 @@ export default function SignInForm() {
           Terms of Service
         </a>{" "}
         and{" "}
-        <a href="#" className={`link-base-content link`}>
+        <Link href="/privacy-policy" className={`link-base-content link`}>
           Privacy Policy
-        </a>
+        </Link>
         .
       </p>
       <p className={`text-center text-sm`}>
