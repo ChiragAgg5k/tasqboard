@@ -6,6 +6,9 @@ import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGlobe } from "react-icons/fa";
 
+const linkHover =
+  "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";
+
 export default async function Home() {
   const session = await getServerAuthSession();
 
@@ -74,18 +77,18 @@ export default async function Home() {
         </nav>
         <nav>
           <header className="footer-title">Company</header>
-          <a className="link-hover link">About us</a>
-          <a className="link-hover link">Contact</a>
-          <a className="link-hover link">Jobs</a>
-          <a className="link-hover link">Press kit</a>
+          <a className={linkHover}>About us</a>
+          <a className={linkHover}>Contact</a>
+          <a className={linkHover}>Jobs</a>
+          <a className={linkHover}>Press kit</a>
         </nav>
         <nav>
           <header className="footer-title">Legal</header>
-          <a className="link-hover link">Terms of use</a>
-          <Link href={`privacy-policy`} className="link-hover link">
+          <a className={linkHover}>Terms of use</a>
+          <Link href={`privacy-policy`} className={linkHover}>
             Privacy policy
           </Link>
-          <a className="link-hover link">Cookie policy</a>
+          <a className={linkHover}>Cookie policy</a>
         </nav>
       </footer>
       <footer className="footer border-t border-base-300 bg-base-200 px-10 py-4 text-base-content">
@@ -99,7 +102,7 @@ export default async function Home() {
           <div className="grid grid-flow-col items-center gap-6">
             <Link href={`https://chirag.is-a.dev/`} className={`group`}>
               <FaGlobe
-                className={`text-3xl text-base-content/70 group-hover:scale-110 group-hover:text-base-content`}
+                className={`text-3xl text-base-content/70 duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
               />
             </Link>
             <Link
@@ -107,12 +110,12 @@ export default async function Home() {
               className={`group`}
             >
               <FaLinkedin
-                className={`text-3xl text-base-content/70 group-hover:scale-110 group-hover:text-base-content`}
+                className={`text-3xl text-base-content/70 duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
               />
             </Link>
             <Link href={`https://github.com/ChiragAgg5k`} className={`group`}>
               <FaGithub
-                className={`text-3xl text-base-content/70 group-hover:scale-110 group-hover:text-base-content`}
+                className={`text-3xl text-base-content/70 duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
               />
             </Link>
           </div>
