@@ -6,6 +6,9 @@ import { FaLinkedin } from "react-icons/fa";
 import { FaGlobe } from "react-icons/fa";
 import HandleUrlToast from "~/app/_components/handle-url-toast";
 import Board from "~/app/_components/board";
+import { FaCheck } from "react-icons/fa";
+import { IoPeople } from "react-icons/io5";
+import { GiProgression } from "react-icons/gi";
 
 const linkHover =
   "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";
@@ -17,30 +20,71 @@ export default async function Home() {
     <main
       className={`md:snap h-screen snap-mandatory overflow-y-auto md:snap-y`}
     >
-      <div className="flex min-h-[100dvh] snap-start flex-col items-center justify-center">
+      <div className="flex min-h-screen snap-start flex-col items-center justify-center">
         <h1
-          className={`mb-4 flex flex-col items-center justify-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default sm:flex-row`}
+          className={` flex flex-col items-center justify-center text-[min(8vw,2.5rem)] font-bold hover:cursor-default sm:flex-row`}
         >
           Welcome to{" "}
-          <span className={`ml-4 text-[min(12vw,3.75rem)] text-accent`}>
+          <span className={`ml-4 text-[min(12vw,4rem)] text-accent`}>
             TasqBoard
           </span>
         </h1>
         <StaggeredText
           text={`Manage your tasks with ease and simplicity. . .`}
-          className={`mb-8 hover:cursor-default`}
+          className={`mb-10 hover:cursor-default`}
+          fontSize={`1.3rem`}
         />
         <div className={`w-full max-w-sm px-4`}>
           <Link
             href={session ? "/dashboard" : "/auth/signup"}
-            className={`btn btn-outline w-full`}
+            className={`btn btn-outline w-full hover:scale-105`}
           >
             {session ? "Go to dashboard" : "Get started"}
           </Link>
         </div>
       </div>
       <div
-        className={`relative flex min-h-screen snap-start flex-col items-center justify-center`}
+        className={`mb-32 grid min-h-[40dvh] snap-center grid-cols-1 items-center gap-6 bg-base-200 p-4 py-12 text-center md:grid-cols-3`}
+      >
+        <div
+          className={`group flex h-full flex-col items-center justify-center`}
+        >
+          <FaCheck
+            className={`mb-4 text-5xl text-accent transition-transform duration-300 ease-in-out group-hover:scale-125`}
+          />
+          <h3 className={`mb-2 text-lg font-bold`}>Organize Your Tasks</h3>
+          <p className={`max-w-md`}>
+            Easily categorize and prioritize your tasks with Tasqboard's
+            intuitive interface.
+          </p>
+        </div>
+        <div
+          className={`group flex h-full flex-col items-center justify-center`}
+        >
+          <IoPeople
+            className={`mb-4 text-5xl text-accent transition-transform duration-300 ease-in-out group-hover:scale-125`}
+          />
+          <h3 className={`mb-2 text-lg font-bold`}>Collaborate with Teams</h3>
+          <p className={`max-w-md`}>
+            Promote collaboration and transparency by sharing task boards with
+            your team.
+          </p>
+        </div>
+        <div
+          className={`group flex h-full flex-col items-center justify-center`}
+        >
+          <GiProgression
+            className={`mb-4 text-5xl text-accent transition-transform duration-300 ease-in-out group-hover:scale-125`}
+          />
+          <h3 className={`mb-2 text-lg font-bold`}>Track Your Progress</h3>
+          <p className={`max-w-md`}>
+            Keep track of your progress with personalized dashboards and
+            productivity reports.
+          </p>
+        </div>
+      </div>
+      <div
+        className={`relative flex min-h-screen snap-start flex-col items-center justify-center px-4`}
       >
         <h3
           className={`mb-3 flex items-center justify-center text-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default`}
@@ -58,7 +102,7 @@ export default async function Home() {
         </div>
       </div>
       <div
-        className={`flex min-h-screen snap-start flex-col items-center justify-center`}
+        className={`flex min-h-screen snap-start flex-col items-center justify-center px-4`}
       >
         <h3
           className={`mb-3 flex items-center justify-center text-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default`}

@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 const StaggeredText = ({
   text,
   className,
+  fontSize = "1.2rem",
 }: {
   text: string;
   className?: string;
+  fontSize?: string;
 }) => {
   const words = text.split(" ");
 
@@ -45,7 +47,7 @@ const StaggeredText = ({
       style={{
         overflow: "hidden",
         display: "flex",
-        fontSize: "1.2rem",
+        fontSize: fontSize,
         flexWrap: "wrap",
         alignItems: "center",
         justifyContent: "center",

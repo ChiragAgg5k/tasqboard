@@ -42,7 +42,7 @@ export default function Board({ className = "" }: { className?: string }) {
   const [columns, setColumns] = useState(exampleColumns);
 
   const handleDrop = (results: DropResult) => {
-    const { source, destination, type } = results;
+    const { source, destination } = results;
 
     if (!destination) {
       return;
