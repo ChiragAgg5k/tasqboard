@@ -2,6 +2,7 @@ import { getServerAuthSession } from "~/server/auth";
 import NewBoardButton from "~/app/(pages)/dashboard/new-board";
 import { api } from "~/trpc/server";
 import Link from "next/link";
+import HandleUrlToast from "~/app/_components/handle-url-toast";
 
 export default async function Dashboard() {
   const session = await getServerAuthSession();
@@ -27,9 +28,11 @@ export default async function Dashboard() {
           >
             <h4 className={`font-bold`}>{board.name}</h4>
             <p className={`text-center text-sm text-base-content/70`}>
-              {board.description && board.description.length > 50
-                ? board.description.substring(0, 50) + "..."
-                : board.description}
+              {board.description
+                ? board.description.length > 50
+                  ? board.description.substring(0, 50) + "..."
+                  : board.description
+                : "No description provided."}
             </p>
           </Link>
         ))}
@@ -37,6 +40,7 @@ export default async function Dashboard() {
       </div>
 
       <hr className={`my-10 border-base-content/20`} />
+      <HandleUrlToast toReplace={`/dashboard`} />
     </div>
   );
 }

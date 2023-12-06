@@ -15,7 +15,7 @@ export default function SignOutButton({
     <button
       onClick={async () => {
         await signOut({
-          callbackUrl: "/",
+          callbackUrl: "/?message=Signed out successfully.",
         });
       }}
       className={className}

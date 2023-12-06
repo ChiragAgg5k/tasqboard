@@ -121,6 +121,7 @@ export default function SignUpForm() {
           className={`input input-bordered mr-4 w-full hover:input-accent`}
           placeholder={`First Name`}
           type={`text`}
+          name={`first-name`}
           id={`first-name`}
           onChange={(e) => {
             setFirstName(e.target.value);
@@ -131,6 +132,7 @@ export default function SignUpForm() {
           placeholder={`Last Name`}
           type={`text`}
           id={`last-name`}
+          name={`last-name`}
           onChange={(e) => {
             setLastName(e.target.value);
           }}

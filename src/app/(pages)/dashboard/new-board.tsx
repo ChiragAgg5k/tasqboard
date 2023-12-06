@@ -80,12 +80,17 @@ export default function NewBoardButton() {
               required
               className={`input input-bordered mb-3 w-full`}
               placeholder="Board name"
+              id={`board-name`}
+              name={`board-name`}
             />
             <textarea
               onChange={(e) => setBoardDescription(e.target.value)}
               className={`textarea textarea-bordered mb-5 w-full p-4 text-base`}
               placeholder="Board description (max 500 characters...)"
               rows={4}
+              id={`board-description`}
+              maxLength={500}
+              name={`board-description`}
             />
             <button className="btn btn-accent w-full" disabled={loading}>
               <TbLoader3

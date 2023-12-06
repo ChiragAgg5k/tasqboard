@@ -5,6 +5,7 @@ import ScrollText from "~/app/_components/scroll-text";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGlobe } from "react-icons/fa";
+import HandleUrlToast from "~/app/_components/handle-url-toast";
 
 const linkHover =
   "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";
@@ -36,7 +37,6 @@ export default async function Home() {
           </Link>
         </div>
         <ScrollText />
-        <hr className={`absolute bottom-0 w-full border-base-content/20`} />
       </div>
       <div
         className={`relative flex min-h-screen flex-col items-center justify-center`}
@@ -52,7 +52,6 @@ export default async function Home() {
             className={`mb-8 hover:cursor-default`}
           />
         </h4>
-        <hr className={`absolute bottom-0 w-full border-base-content/20`} />
       </div>
       <div className={`flex min-h-screen flex-col items-center justify-center`}>
         <h3
@@ -121,6 +120,7 @@ export default async function Home() {
           </div>
         </nav>
       </footer>
+      <HandleUrlToast toReplace={`/`} />
     </main>
   );
 }

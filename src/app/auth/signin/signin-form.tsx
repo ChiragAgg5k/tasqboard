@@ -122,7 +122,7 @@ export default function SignInForm() {
         onClick={async () => {
           setGoogleLoading(true);
           await signIn("google", {
-            callbackUrl: `/dashboard`,
+            callbackUrl: `/dashboard?message=Signed In successfully with Google.`,
           });
         }}
       >
