@@ -1,11 +1,11 @@
 import { getServerAuthSession } from "~/server/auth";
 import Link from "next/link";
 import StaggeredText from "~/app/_components/staggered-text";
-import ScrollText from "~/app/_components/scroll-text";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGlobe } from "react-icons/fa";
 import HandleUrlToast from "~/app/_components/handle-url-toast";
+import Board from "~/app/_components/board";
 
 const linkHover =
   "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";
@@ -14,8 +14,10 @@ export default async function Home() {
   const session = await getServerAuthSession();
 
   return (
-    <main>
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center">
+    <main
+      className={`md:snap h-screen snap-mandatory overflow-y-auto md:snap-y`}
+    >
+      <div className="flex min-h-[100dvh] snap-start flex-col items-center justify-center">
         <h1
           className={`mb-4 flex flex-col items-center justify-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default sm:flex-row`}
         >
@@ -36,10 +38,9 @@ export default async function Home() {
             {session ? "Go to dashboard" : "Get started"}
           </Link>
         </div>
-        <ScrollText />
       </div>
       <div
-        className={`relative flex min-h-screen flex-col items-center justify-center`}
+        className={`relative flex min-h-screen snap-start flex-col items-center justify-center`}
       >
         <h3
           className={`mb-3 flex items-center justify-center text-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default`}
@@ -48,12 +49,17 @@ export default async function Home() {
         </h3>
         <h4>
           <StaggeredText
-            text={`Apply the divide and conquer strategy to your tasks. Makes things easier!`}
-            className={`mb-8 hover:cursor-default`}
+            text={`Optimize tasks with the divide and conquer strategy for effortless efficiency.`}
+            className={`mb-6   hover:cursor-default`}
           />
         </h4>
+        <div className={`w-full sm:px-6 md:px-8`}>
+          <Board className={`w-full`} />
+        </div>
       </div>
-      <div className={`flex min-h-screen flex-col items-center justify-center`}>
+      <div
+        className={`flex min-h-screen snap-start flex-col items-center justify-center`}
+      >
         <h3
           className={`mb-3 flex items-center justify-center text-center text-[min(8vw,2.25rem)] font-bold hover:cursor-default`}
         >
@@ -66,7 +72,7 @@ export default async function Home() {
           />
         </h4>
       </div>
-      <footer className="footer bg-base-200 p-10 text-base-content">
+      <footer className="footer snap-start bg-base-200 p-10 text-base-content">
         <nav>
           <header className="footer-title">Services</header>
           <a className="link-hover link">Branding</a>
