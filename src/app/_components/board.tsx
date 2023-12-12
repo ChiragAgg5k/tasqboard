@@ -55,7 +55,65 @@ export default function Board({ className = "" }: { className?: string }) {
       return;
     }
 
-    console.log(results);
+    const sourceColumn = columns.find(
+      (column) => column.id === source.droppableId,
+    );
+
+    const destinationColumn = columns.find(
+      (column) => column.id === destination.droppableId,
+    );
+
+    if (!sourceColumn || !destinationColumn) return;
+
+    const sourceRow = sourceColumn.rows[source.index];
+    const destinationRow = destinationColumn.rows[destination.index];
+
+    if (!sourceRow || !destinationRow) return;
+
+    if (sourceColumn.id === destinationColumn.id) {
+      const newRows = [...sourceColumn.rows];
+      newRows.splice(source.index, 1);
+      newRows.splice(destination.index, 0, sourceRow);
+      const newColumns = [...columns];
+      newColumns.splice(
+        newColumns.findIndex((column) => column.id === source.droppableId),
+        1,
+        {
+          ...sourceColumn,
+          rows: newRows,
+        },
+      );
+      setColumns(newColumns);
+      return;
+    }
+    // remove source row
+    const newSourceRows = [...sourceColumn.rows];
+    newSourceRows.splice(source.index, 1);
+
+    // insert source row into destination
+    const newDestinationRows = [...destinationColumn.rows];
+    newDestinationRows.splice(destination.index, 0, sourceRow);
+
+    const newColumns = [...columns];
+    newColumns.splice(
+      newColumns.findIndex((column) => column.id === source.droppableId),
+      1,
+      {
+        ...sourceColumn,
+        rows: newSourceRows,
+      },
+    );
+
+    newColumns.splice(
+      newColumns.findIndex((column) => column.id === destination.droppableId),
+      1,
+      {
+        ...destinationColumn,
+        rows: newDestinationRows,
+      },
+    );
+
+    setColumns(newColumns);
   };
 
   return (
