@@ -77,7 +77,7 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return await ctx.db
+      return ctx.db
         .select()
         .from(users)
         .where(eq(users.email, input.email))

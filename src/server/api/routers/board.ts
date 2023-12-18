@@ -26,7 +26,7 @@ export const boardRouter = createTRPCRouter({
     }),
 
   fetchAll: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.select().from(boards);
+    return ctx.db.select().from(boards);
   }),
 
   fetch: protectedProcedure
@@ -36,7 +36,7 @@ export const boardRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return await ctx.db
+      return ctx.db
         .select()
         .from(boards)
         .where(eq(boards.id, input.boardId))

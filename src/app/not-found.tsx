@@ -1,4 +1,4 @@
-import Link from "next/link";
+import RedirectLink from "~/app/_components/redirect-link";
 
 export default function NotFound() {
   return (
@@ -12,9 +12,9 @@ export default function NotFound() {
         The page you are looking for does not exist. Please{" "}
         <span className={`font-bold`}>check the URL</span> and try again.
       </p>
-      <Link href="/" className={`btn`}>
-        Go back home
-      </Link>
+      <RedirectLink redirectUrl={`/`} className={`mt-2`}>
+        Go back to the home page
+      </RedirectLink>
     </div>
   );
 }
