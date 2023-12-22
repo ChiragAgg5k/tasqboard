@@ -42,4 +42,14 @@ export const boardRouter = createTRPCRouter({
         .where(eq(boards.id, input.boardId))
         .limit(1);
     }),
+
+  delete: protectedProcedure
+    .input(
+      z.object({
+        boardId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.delete(boards).where(eq(boards.id, input.boardId));
+    }),
 });

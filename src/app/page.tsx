@@ -13,6 +13,37 @@ import { GiProgression } from "react-icons/gi";
 const linkHover =
   "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";
 
+const exampleColumns = [
+  {
+    id: "todo",
+    title: "To do",
+    rows: [
+      { id: "1", content: "Star this project on github" },
+      { id: "2", content: "Visit my portfolio website" },
+    ],
+  },
+  {
+    id: "in-progress",
+    title: "In progress",
+    rows: [
+      { id: "3", content: "Exploring this project" },
+      { id: "4", content: "Liking what you see" },
+      {
+        id: "5",
+        content: "Say hi to me on Twitter!",
+      },
+    ],
+  },
+  {
+    id: "done",
+    title: "Done",
+    rows: [
+      { id: "6", content: "Followed me on GitHub, right?" },
+      { id: "7", content: "Connected with me on LinkedIn, righttt?" },
+    ],
+  },
+];
+
 export default async function Home() {
   const session = await getServerAuthSession();
 
@@ -98,7 +129,7 @@ export default async function Home() {
           />
         </h4>
         <div className={`w-full sm:px-6 md:px-8`}>
-          <Board className={`w-full`} />
+          <Board className={`w-full`} data={exampleColumns} />
         </div>
       </div>
       <div
@@ -119,10 +150,10 @@ export default async function Home() {
       <footer className="footer snap-start bg-base-200 p-10 text-base-content">
         <nav>
           <header className="footer-title">Services</header>
-          <a className="link-hover link">Branding</a>
-          <a className="link-hover link">Design</a>
-          <a className="link-hover link">Marketing</a>
-          <a className="link-hover link">Advertisement</a>
+          <a className={linkHover}>Branding</a>
+          <a className={linkHover}>Design</a>
+          <a className={linkHover}>Marketing</a>
+          <a className={linkHover}>Advertisement</a>
         </nav>
         <nav>
           <header className="footer-title">Company</header>
