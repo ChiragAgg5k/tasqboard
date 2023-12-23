@@ -8,6 +8,7 @@ import {
 import { type FormEvent, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { toast } from "sonner";
+import { CiCirclePlus } from "react-icons/ci";
 
 type Column = {
   id: string;
@@ -23,9 +24,11 @@ type Row = {
 export default function Board({
   data,
   className = "",
+  showAddColumn = true,
 }: {
   data: Column[];
   className?: string;
+  showAddColumn?: boolean;
 }) {
   const [columns, setColumns] = useState<Column[]>(data);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
@@ -123,6 +126,25 @@ export default function Board({
     const sourceRow = sourceColumn.rows[source.index];
     const destinationRow = destinationColumn.rows[destination.index];
 
+    if (sourceRow && !destinationRow)
+      return setColumns(
+        columns.map((column) => {
+          if (column.id === source.droppableId) {
+            return {
+              ...column,
+              rows: column.rows.filter((row) => row.id !== sourceRow.id),
+            };
+          }
+          if (column.id === destination.droppableId) {
+            return {
+              ...column,
+              rows: [...column.rows, sourceRow],
+            };
+          }
+          return column;
+        }),
+      );
+
     if (!sourceRow || !destinationRow) return;
 
     if (sourceColumn.id === destinationColumn.id) {
@@ -173,95 +195,74 @@ export default function Board({
 
   return (
     <div>
-      {columns.length > 0 && (
-        <div
-          className={`grid grid-cols-1 gap-8 rounded-md p-8 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
-        >
-          <DragDropContext onDragEnd={handleDrop}>
-            {columns.map((column, index) => (
-              <Droppable droppableId={column.id} type="group" key={index}>
-                {(provided) => (
+      <div
+        className={`grid grid-cols-1 gap-8 rounded-md py-8 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
+      >
+        <DragDropContext onDragEnd={handleDrop}>
+          {columns.map((column, index) => (
+            <Droppable droppableId={column.id} type="group" key={index}>
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className={`w-full rounded-xl border border-base-content/10 p-6 shadow-lg`}
+                >
                   <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className={`w-full rounded-xl border border-base-content/10 p-6 shadow-lg`}
+                    className={`relative mb-4 flex items-center justify-center`}
                   >
+                    <h3 className={`text-center text-xl font-bold`}>
+                      {column.title}
+                    </h3>
                     <div
-                      className={`relative mb-4 flex items-center justify-center`}
+                      className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
+                      onClick={() => {
+                        setSelectedColumn(column);
+                        const modal = document.getElementById(
+                          "new_row_modal",
+                        )! as HTMLDialogElement;
+                        modal.showModal();
+                      }}
                     >
-                      <h3 className={`text-center text-xl font-bold`}>
-                        {column.title}
-                      </h3>
-                      <div
-                        className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
-                        onClick={() => {
-                          setSelectedColumn(column);
-                          const modal = document.getElementById(
-                            "new_row_modal",
-                          )! as HTMLDialogElement;
-                          modal.showModal();
-                        }}
-                      >
-                        <FaPlus />
-                      </div>
+                      <FaPlus />
                     </div>
-                    {column.rows.map((row, index) => (
-                      <Draggable
-                        key={row.id}
-                        draggableId={row.id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            className={`my-2 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                          >
-                            {row.content}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
                   </div>
-                )}
-              </Droppable>
-            ))}
-          </DragDropContext>
-        </div>
-      )}
+                  {column.rows.map((row, index) => (
+                    <Draggable key={row.id} draggableId={row.id} index={index}>
+                      {(provided) => (
+                        <div
+                          className={`my-2 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                        >
+                          {row.content}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          ))}
+        </DragDropContext>
 
-      {columns.length === 0 ? (
-        <div
-          className={`flex min-h-[40dvh] flex-col items-center justify-center rounded-xl border`}
-        >
-          <h1 className={`mb-4 text-xl font-bold`}>No columns found . . .</h1>
+        {showAddColumn && (
           <button
-            className={`btn`}
             onClick={() => {
               const modal = document.getElementById(
                 "new_column_modal",
               )! as HTMLDialogElement;
               modal.showModal();
             }}
+            className={`group flex h-52 items-center justify-center rounded-xl border border-base-content/10 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content/50 focus:outline-none`}
           >
-            Create your first column
+            <CiCirclePlus
+              className={`text-4xl text-base-content/50 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
+            />
           </button>
-        </div>
-      ) : (
-        <button
-          className={`btn`}
-          onClick={() => {
-            const modal = document.getElementById(
-              "new_column_modal",
-            )! as HTMLDialogElement;
-            modal.showModal();
-          }}
-        >
-          Add new column
-        </button>
-      )}
+        )}
+      </div>
 
       <dialog id="new_row_modal" className="modal">
         <div className="modal-box">

@@ -22,6 +22,7 @@ export default function DeleteBoardButton({
     if (deleteBoard.isSuccess) {
       toast.success("Board deleted successfully!");
       router.push(`/dashboard`);
+      router.refresh();
     }
 
     if (deleteBoard.error) {

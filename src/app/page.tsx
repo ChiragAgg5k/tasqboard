@@ -129,7 +129,11 @@ export default async function Home() {
           />
         </h4>
         <div className={`w-full sm:px-6 md:px-8`}>
-          <Board className={`w-full`} data={exampleColumns} />
+          <Board
+            className={`w-full`}
+            data={exampleColumns}
+            showAddColumn={false}
+          />
         </div>
       </div>
       <div
