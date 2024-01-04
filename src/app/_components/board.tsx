@@ -39,6 +39,9 @@ export default function Board({
   const [newRowContent, setNewRowContent] = useState<string>("");
 
   const createColumn = api.column.create.useMutation();
+  const createRow = api.row.create.useMutation();
+
+  const updateColumn = api.row.updateColumn.useMutation();
 
   const handleCreateRow = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,6 +70,13 @@ export default function Board({
         rows: [...selectedColumn.rows, newRow],
       },
     );
+
+    if (boardId) {
+      createRow.mutate({
+        columnId: selectedColumn.id,
+        content: newRowContent,
+      });
+    }
 
     setColumns(newColumns);
     setNewRowContent("");
@@ -138,7 +148,14 @@ export default function Board({
     const sourceRow = sourceColumn.rows[source.index];
     const destinationRow = destinationColumn.rows[destination.index];
 
-    if (sourceRow && !destinationRow)
+    if (sourceRow && !destinationRow) {
+      if (boardId) {
+        updateColumn.mutate({
+          columnId: destination.droppableId,
+          rowId: sourceRow.id,
+        });
+      }
+
       return setColumns(
         columns.map((column) => {
           if (column.id === source.droppableId) {
@@ -156,6 +173,7 @@ export default function Board({
           return column;
         }),
       );
+    }
 
     if (!sourceRow || !destinationRow) return;
 
@@ -203,6 +221,13 @@ export default function Board({
     );
 
     setColumns(newColumns);
+
+    if (boardId) {
+      updateColumn.mutate({
+        columnId: destination.droppableId,
+        rowId: sourceRow.id,
+      });
+    }
   };
 
   return (

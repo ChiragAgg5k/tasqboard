@@ -60,7 +60,7 @@ export default function NewBoardButton() {
           )! as HTMLDialogElement;
           modal.showModal();
         }}
-        className={`group flex h-52 items-center justify-center rounded-xl border border-base-content/50 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content focus:outline-none`}
+        className={`group flex h-52 w-full items-center justify-center rounded-xl border border-base-content/50 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content focus:outline-none`}
       >
         <CiCirclePlus
           className={`text-4xl text-base-content/50 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}

@@ -130,16 +130,29 @@ export const columns = mysqlTable(
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     title: varchar("title", { length: 255 }).notNull(),
     boardId: varchar("boardId", { length: 255 }).notNull(),
-    createdAt: timestamp("createdAt", {
-      mode: "date",
-      fsp: 3,
-    }).default(sql`CURRENT_TIMESTAMP(3)`),
   },
   (column) => ({
     boardIdIdx: index("boardId_idx").on(column.boardId),
   }),
 );
 
-export const columnsRelations = relations(columns, ({ one }) => ({
+export const columnsRelations = relations(columns, ({ one, many }) => ({
   board: one(boards, { fields: [columns.boardId], references: [boards.id] }),
+  rows: many(rows),
+}));
+
+export const rows = mysqlTable(
+  "row",
+  {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    content: varchar("content", { length: 255 }).notNull(),
+    columnId: varchar("columnId", { length: 255 }).notNull(),
+  },
+  (row) => ({
+    columnIdIdx: index("columnId_idx").on(row.columnId),
+  }),
+);
+
+export const rowsRelations = relations(rows, ({ one }) => ({
+  column: one(columns, { fields: [rows.columnId], references: [columns.id] }),
 }));

@@ -36,16 +36,14 @@ export const boardRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      // return ctx.db
-      //   .select()
-      //   .from(boards)
-      //   .where(eq(boards.id, input.boardId))
-      //   .limit(1);
-
       return ctx.db.query.boards.findFirst({
         where: eq(boards.id, input.boardId),
         with: {
-          columns: true,
+          columns: {
+            with: {
+              rows: true,
+            },
+          },
         },
       });
     }),

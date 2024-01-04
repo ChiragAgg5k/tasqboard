@@ -33,7 +33,10 @@ export default async function BoardPage({
   const columns = board.columns.map((column) => ({
     id: column.id,
     title: column.title,
-    rows: [],
+    rows: column.rows.map((row) => ({
+      id: row.id,
+      content: row.content,
+    })),
   }));
 
   return (
@@ -45,7 +48,7 @@ export default async function BoardPage({
             {board.description ? board.description : "No description provided."}
           </p>
         </div>
-        <Link href={`/boards/${id}/settings`} className={`ghost btn btn`}>
+        <Link href={`/boards/${id}/settings`} className={`ghost btn`}>
           <IoIosSettings className={`text-3xl text-base-content/70`} />
         </Link>
       </div>
