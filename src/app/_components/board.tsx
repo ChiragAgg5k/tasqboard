@@ -9,6 +9,7 @@ import { type FormEvent, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { toast } from "sonner";
 import { CiCirclePlus } from "react-icons/ci";
+import { api } from "~/trpc/react";
 
 type Column = {
   id: string;
@@ -22,10 +23,12 @@ type Row = {
 };
 
 export default function Board({
+  boardId,
   data,
   className = "",
   showAddColumn = true,
 }: {
+  boardId: string | undefined;
   data: Column[];
   className?: string;
   showAddColumn?: boolean;
@@ -34,6 +37,8 @@ export default function Board({
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [newColumnName, setNewColumnName] = useState<string>("");
   const [newRowContent, setNewRowContent] = useState<string>("");
+
+  const createColumn = api.column.create.useMutation();
 
   const handleCreateRow = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -88,6 +93,13 @@ export default function Board({
       title: newColumnName,
       rows: [],
     };
+
+    if (boardId) {
+      createColumn.mutate({
+        boardId: boardId,
+        columnName: newColumnName,
+      });
+    }
 
     setColumns([...columns, newColumn]);
     setNewColumnName("");
@@ -205,7 +217,7 @@ export default function Board({
                 <div
                   {...provided.droppableProps}
                   ref={provided.innerRef}
-                  className={`w-full rounded-xl border border-base-content/10 p-6 shadow-lg`}
+                  className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 shadow-lg`}
                 >
                   <div
                     className={`relative mb-4 flex items-center justify-center`}

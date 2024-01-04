@@ -1,9 +1,9 @@
 import { api } from "~/trpc/server";
 import Link from "next/link";
-import Board from "~/app/_components/board";
-import { IoIosSettings } from "react-icons/io";
+import DeleteBoardButton from "~/app/_components/delete-board-button";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
-export default async function BoardPage({
+export default async function BoardSettings({
   params: { id },
 }: {
   params: {
@@ -30,26 +30,31 @@ export default async function BoardPage({
       </div>
     );
 
-  const columns = board.columns.map((column) => ({
-    id: column.id,
-    title: column.title,
-    rows: [],
-  }));
-
   return (
     <div className={`p-8`}>
-      <div className={`mb-4 flex items-center justify-between`}>
+      <div className={`mb-8 flex items-center justify-between`}>
         <div className={`flex flex-col items-start justify-center`}>
           <h1 className={`mb-2 text-3xl font-bold`}>{board.name}</h1>
           <p className={`text-base-content/70`}>
             {board.description ? board.description : "No description provided."}
           </p>
         </div>
-        <Link href={`/boards/${id}/settings`} className={`ghost btn btn`}>
-          <IoIosSettings className={`text-3xl text-base-content/70`} />
+        <Link href={`/boards/${id}`} className={`ghost btn btn`}>
+          <IoMdArrowRoundBack className={`text-3xl text-base-content/70`} />
         </Link>
       </div>
-      <Board data={columns} boardId={id} />
+      <div
+        className={`flex items-center justify-between rounded-xl border p-6`}
+      >
+        <div>
+          <h3 className={`mb-2 text-xl font-bold`}>Delete board</h3>
+          <p className={`text-base-content/70`}>
+            Permanently delete this board along with all its data. This action
+            cannot be undone.
+          </p>
+        </div>
+        <DeleteBoardButton boardId={id} />
+      </div>
     </div>
   );
 }

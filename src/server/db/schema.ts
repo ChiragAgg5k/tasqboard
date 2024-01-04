@@ -92,16 +92,54 @@ export const verificationTokens = mysqlTable(
   }),
 );
 
+// type Column = {
+//     id: string;
+//     title: string;
+//     rows: Row[];
+// };
+//
+// type Row = {
+//     id: string;
+//     content: string;
+// };
+
 export const boards = mysqlTable(
   "board",
   {
-    // auto incrementing id
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
     description: varchar("description", { length: 255 }),
     creatorId: varchar("creatorId", { length: 255 }).notNull(),
+    createdAt: timestamp("createdAt", {
+      mode: "date",
+      fsp: 3,
+    }).default(sql`CURRENT_TIMESTAMP(3)`),
   },
   (board) => ({
     creatorIdIdx: index("creatorId_idx").on(board.creatorId),
   }),
 );
+
+export const boardsRelations = relations(boards, ({ many }) => ({
+  columns: many(columns),
+}));
+
+export const columns = mysqlTable(
+  "column",
+  {
+    id: varchar("id", { length: 255 }).notNull().primaryKey(),
+    title: varchar("title", { length: 255 }).notNull(),
+    boardId: varchar("boardId", { length: 255 }).notNull(),
+    createdAt: timestamp("createdAt", {
+      mode: "date",
+      fsp: 3,
+    }).default(sql`CURRENT_TIMESTAMP(3)`),
+  },
+  (column) => ({
+    boardIdIdx: index("boardId_idx").on(column.boardId),
+  }),
+);
+
+export const columnsRelations = relations(columns, ({ one }) => ({
+  board: one(boards, { fields: [columns.boardId], references: [boards.id] }),
+}));

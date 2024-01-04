@@ -51,9 +51,9 @@ export default async function Home() {
     <main
       className={`md:snap h-screen snap-mandatory overflow-y-auto md:snap-y`}
     >
-      <div className="flex min-h-screen snap-start flex-col items-center justify-center">
+      <div className="flex min-h-[75dvh] snap-start flex-col items-center justify-center">
         <h1
-          className={` flex flex-col items-center justify-center text-[min(8vw,2.5rem)] font-bold hover:cursor-default sm:flex-row`}
+          className={` flex-cwol flex items-center justify-center text-[min(8vw,2.5rem)] font-bold hover:cursor-default sm:flex-row`}
         >
           Welcome to{" "}
           <span className={`ml-4 text-[min(12vw,4rem)] text-accent`}>
@@ -130,6 +130,7 @@ export default async function Home() {
         </h4>
         <div className={`w-full sm:px-6 md:px-8`}>
           <Board
+            boardId={undefined}
             className={`w-full`}
             data={exampleColumns}
             showAddColumn={false}
