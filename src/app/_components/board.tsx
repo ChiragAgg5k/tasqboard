@@ -24,7 +24,7 @@ const Draggable = dynamic(
   { ssr: false },
 );
 
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { FaPencilAlt, FaPlus, FaMinus } from "react-icons/fa";
 import { toast } from "sonner";
 import { CiCirclePlus } from "react-icons/ci";

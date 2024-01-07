@@ -1,8 +1,6 @@
 import { api } from "~/trpc/server";
 import Link from "next/link";
 import Board from "~/app/_components/board";
-import { IoIosSettings } from "react-icons/io";
-import { FaPencilAlt } from "react-icons/fa";
 
 export default async function BoardPage({
   params: { id },
