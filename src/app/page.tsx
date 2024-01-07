@@ -9,6 +9,8 @@ import Board from "~/app/_components/board";
 import { FaCheck } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import { GiProgression } from "react-icons/gi";
+import { redirect } from "next/navigation";
+import DemoCalendar from "~/app/_components/demo-calendar";
 
 const linkHover =
   "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";
@@ -47,13 +49,17 @@ const exampleColumns = [
 export default async function Home() {
   const session = await getServerAuthSession();
 
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <main
       className={`md:snap h-screen snap-mandatory overflow-y-auto md:snap-y`}
     >
       <div className="flex min-h-[75dvh] snap-start flex-col items-center justify-center">
         <h1
-          className={` flex-cwol flex items-center justify-center text-[min(8vw,2.5rem)] font-bold hover:cursor-default sm:flex-row`}
+          className={`flex flex-col items-center justify-center text-[min(8vw,2.5rem)] font-bold hover:cursor-default sm:flex-row`}
         >
           Welcome to{" "}
           <span className={`ml-4 text-[min(12vw,4rem)] text-accent`}>
@@ -67,10 +73,10 @@ export default async function Home() {
         />
         <div className={`w-full max-w-sm px-4`}>
           <Link
-            href={session ? "/dashboard" : "/auth/signup"}
+            href={"/auth/signup"}
             className={`btn btn-outline w-full hover:scale-105`}
           >
-            {session ? "Go to dashboard" : "Get started"}
+            Get started
           </Link>
         </div>
       </div>
@@ -133,7 +139,9 @@ export default async function Home() {
             boardId={undefined}
             className={`w-full`}
             data={exampleColumns}
-            showAddColumn={false}
+            editable={false}
+            name={"Example Board"}
+            description={"Example Board Description"}
           />
         </div>
       </div>
@@ -151,6 +159,9 @@ export default async function Home() {
             className={`mb-8 hover:cursor-default`}
           />
         </h4>
+        <div className={`w-[70vw]`}>
+          <DemoCalendar />
+        </div>
       </div>
       <footer className="footer snap-start bg-base-200 p-10 text-base-content">
         <nav>

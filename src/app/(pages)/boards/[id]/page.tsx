@@ -2,6 +2,7 @@ import { api } from "~/trpc/server";
 import Link from "next/link";
 import Board from "~/app/_components/board";
 import { IoIosSettings } from "react-icons/io";
+import { FaPencilAlt } from "react-icons/fa";
 
 export default async function BoardPage({
   params: { id },
@@ -41,18 +42,12 @@ export default async function BoardPage({
 
   return (
     <div className={`p-8`}>
-      <div className={`mb-4 flex items-center justify-between`}>
-        <div className={`flex flex-col items-start justify-center`}>
-          <h1 className={`mb-2 text-3xl font-bold`}>{board.name}</h1>
-          <p className={`text-base-content/70`}>
-            {board.description ? board.description : "No description provided."}
-          </p>
-        </div>
-        <Link href={`/boards/${id}/settings`} className={`ghost btn`}>
-          <IoIosSettings className={`text-3xl text-base-content/70`} />
-        </Link>
-      </div>
-      <Board data={columns} boardId={id} />
+      <Board
+        name={board.name}
+        description={board.description}
+        data={columns}
+        boardId={id}
+      />
     </div>
   );
 }

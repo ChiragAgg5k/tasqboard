@@ -31,8 +31,8 @@ export default async function BoardSettings({
     );
 
   return (
-    <div className={`p-8`}>
-      <div className={`mb-8 flex items-center justify-between`}>
+    <div className={`space-y-8 p-8`}>
+      <div className={`flex items-center justify-between`}>
         <div className={`flex flex-col items-start justify-center`}>
           <h1 className={`mb-2 text-3xl font-bold`}>{board.name}</h1>
           <p className={`text-base-content/70`}>
@@ -42,6 +42,40 @@ export default async function BoardSettings({
         <Link href={`/boards/${id}`} className={`ghost btn btn`}>
           <IoMdArrowRoundBack className={`text-3xl text-base-content/70`} />
         </Link>
+      </div>
+      <div
+        className={`flex items-center justify-between rounded-xl border p-6`}
+      >
+        <div className={`w-full`}>
+          <h3 className={`mb-1 text-xl font-bold`}>Edit Board Name</h3>
+          <p className={`mb-3 text-base-content/70`}>
+            Change the name of this board.
+          </p>
+          <div className={`flex w-full`}>
+            <input
+              className={`input input-bordered mr-4 w-full border-base-content/10`}
+              defaultValue={board.name}
+            />
+            <button className={`btn btn-primary`}>Save</button>
+          </div>
+        </div>
+      </div>
+      <div
+        className={`flex items-center justify-between rounded-xl border p-6`}
+      >
+        <div className={`w-full`}>
+          <h3 className={`mb-1 text-xl font-bold`}>Edit Board Description</h3>
+          <p className={`mb-3 text-base-content/70`}>
+            Change the description of this board.
+          </p>
+          <div className={`flex w-full items-center`}>
+            <textarea
+              className={`textarea textarea-bordered mr-4 w-full border-base-content/10`}
+              defaultValue={board.description ? board.description : ""}
+            />
+            <button className={`btn btn-primary`}>Save</button>
+          </div>
+        </div>
       </div>
       <div
         className={`flex items-center justify-between rounded-xl border p-6`}

@@ -3,6 +3,7 @@ import NewBoardButton from "~/app/(pages)/dashboard/new-board";
 import { api } from "~/trpc/server";
 import Link from "next/link";
 import HandleUrlToast from "~/app/_components/handle-url-toast";
+import DemoCalendar from "~/app/_components/demo-calendar";
 
 export default async function Dashboard() {
   const session = await getServerAuthSession();
@@ -40,6 +41,16 @@ export default async function Dashboard() {
       </div>
 
       <hr className={`my-10 border-base-content/20`} />
+
+      <h3 className={`mb-8 text-xl font-bold text-base-content/80`}>
+        Calendar and events
+      </h3>
+      <div className={`mb-16 flex items-center justify-center`}>
+        <div className={`w-[90vw]`}>
+          <DemoCalendar />
+        </div>
+      </div>
+
       <HandleUrlToast toReplace={`/dashboard`} />
     </div>
   );

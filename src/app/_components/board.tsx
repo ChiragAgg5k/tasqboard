@@ -1,15 +1,38 @@
 "use client";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  type DropResult,
-} from "react-beautiful-dnd";
-import { type FormEvent, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import dynamic from "next/dynamic";
+
+const DragDropContext = dynamic(
+  async () => {
+    const mod = await import("react-beautiful-dnd");
+    return mod.DragDropContext;
+  },
+  { ssr: false },
+);
+
+const Droppable = dynamic(
+  async () => {
+    const mod = await import("react-beautiful-dnd");
+    return mod.Droppable;
+  },
+  { ssr: false },
+);
+const Draggable = dynamic(
+  async () => {
+    const mod = await import("react-beautiful-dnd");
+    return mod.Draggable;
+  },
+  { ssr: false },
+);
+
+import { type FormEvent, useEffect, useState } from "react";
+import { FaPencilAlt, FaPlus, FaMinus } from "react-icons/fa";
 import { toast } from "sonner";
 import { CiCirclePlus } from "react-icons/ci";
 import { api } from "~/trpc/react";
+import Link from "next/link";
+import { IoIosSettings } from "react-icons/io";
+import { MdDoneOutline } from "react-icons/md";
+import { type DropResult } from "react-beautiful-dnd";
 
 type Column = {
   id: string;
@@ -24,15 +47,21 @@ type Row = {
 
 export default function Board({
   boardId,
+  name,
+  description = null,
   data,
   className = "",
-  showAddColumn = true,
+  editable = true,
 }: {
   boardId: string | undefined;
+  name: string;
+  description: string | null;
   data: Column[];
   className?: string;
-  showAddColumn?: boolean;
+  editable?: boolean;
 }) {
+  const [mode, setMode] = useState<"view" | "edit">("view");
+
   const [columns, setColumns] = useState<Column[]>(data);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
   const [newColumnName, setNewColumnName] = useState<string>("");
@@ -40,7 +69,6 @@ export default function Board({
 
   const createColumn = api.column.create.useMutation();
   const createRow = api.row.create.useMutation();
-
   const updateColumn = api.row.updateColumn.useMutation();
 
   const handleCreateRow = (e: FormEvent<HTMLFormElement>) => {
@@ -231,127 +259,216 @@ export default function Board({
   };
 
   return (
-    <div>
-      <div
-        className={`grid grid-cols-1 gap-8 rounded-md py-8 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
-      >
-        <DragDropContext onDragEnd={handleDrop}>
-          {columns.map((column, index) => (
-            <Droppable droppableId={column.id} type="group" key={index}>
-              {(provided) => (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 shadow-lg`}
-                >
+    <>
+      {editable && (
+        <div className={`mb-4 flex items-center justify-between`}>
+          <div className={`flex flex-col items-start justify-center`}>
+            <h1 className={`mb-2 text-3xl font-bold`}>{name}</h1>
+            <p className={`text-base-content/70`}>
+              {description ? description : "No description provided."}
+            </p>
+          </div>
+          <div>
+            <button
+              className={`ghost btn mr-4`}
+              onClick={() => setMode(mode === "view" ? "edit" : "view")}
+            >
+              {mode === "view" ? (
+                <FaPencilAlt
+                  className={`text-2xl text-base-content/70 md:text-3xl`}
+                />
+              ) : (
+                <MdDoneOutline
+                  className={`text-2xl text-base-content/70 md:text-3xl`}
+                />
+              )}
+            </button>
+            <Link href={`/boards/${boardId}/settings`} className={`ghost btn`}>
+              <IoIosSettings
+                className={`text-2xl text-base-content/70 md:text-3xl`}
+              />
+            </Link>
+          </div>
+        </div>
+      )}
+
+      <div>
+        <div
+          className={`grid grid-cols-1 gap-8 rounded-md py-8 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
+        >
+          <DragDropContext onDragEnd={handleDrop}>
+            {columns.map((column, index) => (
+              <Droppable droppableId={column.id} type="group" key={index}>
+                {(provided) => (
                   <div
-                    className={`relative mb-4 flex items-center justify-center`}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 shadow-lg`}
                   >
-                    <h3 className={`text-center text-xl font-bold`}>
-                      {column.title}
-                    </h3>
                     <div
-                      className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
-                      onClick={() => {
-                        setSelectedColumn(column);
-                        const modal = document.getElementById(
-                          "new_row_modal",
-                        )! as HTMLDialogElement;
-                        modal.showModal();
-                      }}
+                      className={`relative mb-4 flex items-center justify-center`}
                     >
-                      <FaPlus />
-                    </div>
-                  </div>
-                  {column.rows.map((row, index) => (
-                    <Draggable key={row.id} draggableId={row.id} index={index}>
-                      {(provided) => (
+                      <h3 className={`text-center text-xl font-bold`}>
+                        {column.title}
+                      </h3>
+                      {mode === "view" ? (
                         <div
-                          className={`my-2 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          ref={provided.innerRef}
+                          className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
+                          onClick={() => {
+                            setSelectedColumn(column);
+                            const modal = document.getElementById(
+                              "new_row_modal",
+                            )! as HTMLDialogElement;
+                            modal.showModal();
+                          }}
                         >
-                          {row.content}
+                          <FaPlus />
+                        </div>
+                      ) : (
+                        <div
+                          onClick={() => {
+                            const modal = document.getElementById(
+                              "removed_column_modal",
+                            )! as HTMLDialogElement;
+                            modal.showModal();
+                          }}
+                          className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
+                        >
+                          <FaMinus />
                         </div>
                       )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          ))}
-        </DragDropContext>
+                    </div>
+                    {column.rows.map((row, index) => (
+                      <Draggable
+                        key={row.id}
+                        draggableId={row.id}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <div
+                            className={`relative my-2 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                          >
+                            {row.content}
+                            {mode === "edit" && (
+                              <div
+                                className={`btn btn-ghost btn-sm absolute right-2 top-[0.7rem]`}
+                              >
+                                <FaMinus className={`text-base-content/50`} />
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            ))}
+          </DragDropContext>
 
-        {showAddColumn && (
-          <button
-            onClick={() => {
-              const modal = document.getElementById(
-                "new_column_modal",
-              )! as HTMLDialogElement;
-              modal.showModal();
-            }}
-            className={`group flex h-52 items-center justify-center rounded-xl border border-base-content/10 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content/50 focus:outline-none`}
-          >
-            <CiCirclePlus
-              className={`text-4xl text-base-content/50 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
-            />
-          </button>
-        )}
+          {editable && (
+            <button
+              onClick={() => {
+                const modal = document.getElementById(
+                  "new_column_modal",
+                )! as HTMLDialogElement;
+                modal.showModal();
+              }}
+              className={`group flex h-52 items-center justify-center rounded-xl border border-base-content/10 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content/50 focus:outline-none`}
+            >
+              <CiCirclePlus
+                className={`text-4xl text-base-content/50 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
+              />
+            </button>
+          )}
+        </div>
+
+        <dialog id="new_row_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="mb-2 text-lg font-bold">Add new task</h3>
+            <p className={`mb-5 text-sm text-base-content/70`}>
+              Describe the task you want to add to the column{" "}
+            </p>
+            <form onSubmit={handleCreateRow}>
+              <input
+                type="text"
+                className={`input input-bordered w-full`}
+                placeholder="Task description"
+                id={`task-description`}
+                name={`task-description`}
+                onChange={(e) => setNewRowContent(e.target.value)}
+                value={newRowContent}
+              />
+              <div className={`modal-action`}>
+                <button className="btn btn-accent">Create</button>
+              </div>
+            </form>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button className={`hover:cursor-default`}>close</button>
+          </form>
+        </dialog>
+
+        <dialog id="new_column_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="mb-2 text-lg font-bold">Add new column</h3>
+            <p className={`mb-5 text-sm text-base-content/70`}>
+              Give your column a name.
+            </p>
+            <form onSubmit={handleCreateColumn}>
+              <input
+                type="text"
+                className={`input input-bordered w-full`}
+                placeholder="Column name"
+                id={`column-name`}
+                name={`column-name`}
+                onChange={(e) => setNewColumnName(e.target.value)}
+                value={newColumnName}
+              />
+              <div className={`modal-action`}>
+                <button className="btn btn-accent">Create</button>
+              </div>
+            </form>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button className={`hover:cursor-default`}>close</button>
+          </form>
+        </dialog>
+
+        <dialog id="removed_column_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="mb-2 text-lg font-bold">Remove column</h3>
+            <p className={`mb-5 text-sm text-base-content/70`}>
+              Are you sure you want to remove this column?
+            </p>
+            <div className={`modal-action`}>
+              <form method="dialog">
+                <button className="btn btn-error mr-2" type={"submit"}>
+                  Remove
+                </button>
+              </form>
+              <button
+                className="btn"
+                onClick={() => {
+                  const modal = document.getElementById(
+                    "removed_column_modal",
+                  )! as HTMLDialogElement;
+                  modal.close();
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button className={`hover:cursor-default`}>close</button>
+          </form>
+        </dialog>
       </div>
-
-      <dialog id="new_row_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="mb-2 text-lg font-bold">Add new task</h3>
-          <p className={`mb-5 text-sm text-base-content/70`}>
-            Describe the task you want to add to the column{" "}
-          </p>
-          <form onSubmit={handleCreateRow}>
-            <input
-              type="text"
-              className={`input input-bordered w-full`}
-              placeholder="Task description"
-              id={`task-description`}
-              name={`task-description`}
-              onChange={(e) => setNewRowContent(e.target.value)}
-              value={newRowContent}
-            />
-            <div className={`modal-action`}>
-              <button className="btn btn-accent">Create</button>
-            </div>
-          </form>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button className={`hover:cursor-default`}>close</button>
-        </form>
-      </dialog>
-
-      <dialog id="new_column_modal" className="modal">
-        <div className="modal-box">
-          <h3 className="mb-2 text-lg font-bold">Add new column</h3>
-          <p className={`mb-5 text-sm text-base-content/70`}>
-            Give your column a name.
-          </p>
-          <form onSubmit={handleCreateColumn}>
-            <input
-              type="text"
-              className={`input input-bordered w-full`}
-              placeholder="Column name"
-              id={`column-name`}
-              name={`column-name`}
-              onChange={(e) => setNewColumnName(e.target.value)}
-              value={newColumnName}
-            />
-            <div className={`modal-action`}>
-              <button className="btn btn-accent">Create</button>
-            </div>
-          </form>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button className={`hover:cursor-default`}>close</button>
-        </form>
-      </dialog>
-    </div>
+    </>
   );
 }
