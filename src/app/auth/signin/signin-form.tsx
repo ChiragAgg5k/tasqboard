@@ -45,17 +45,24 @@ export default function SignInForm() {
           className={`flex items-center justify-start space-x-4 bg-base-200 p-4 text-sm`}
         >
           <MdError className={`text-2xl`} />
-          {error === "UserNotFound" && (
+          {error === "UserNotFound" ? (
             <p>No account found with that email address.</p>
-          )}
-          {error === "PasswordNotSet" && <p>Please sign in with Google.</p>}
-          {error === "InvalidPassword" && (
+          ) : error === "PasswordNotSet" ? (
+            <p>Please sign in with Google.</p>
+          ) : error === "InvalidPassword" ? (
             <p>Invalid password. Please try again.</p>
-          )}
-          {error === "EmailNotVerified" && (
+          ) : error === "EmailNotVerified" ? (
             <p>Please verify your email address before signing in.</p>
+          ) : error === "NotAuthenticated" ? (
+            <p>Please sign in to continue.</p>
+          ) : error === "OAuthAccountNotLinked" ? (
+            <p>
+              An account with that email address already exists. Please sign in
+              with Google.
+            </p>
+          ) : (
+            <p>An unknown error occurred. Please try again.</p>
           )}
-          {error === "NotAuthenticated" && <p>Please sign in to continue.</p>}
         </div>
       ) : (
         <p className={`text-center text-sm`}>
