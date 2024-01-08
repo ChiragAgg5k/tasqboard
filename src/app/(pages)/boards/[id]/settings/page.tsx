@@ -2,6 +2,8 @@ import { api } from "~/trpc/server";
 import Link from "next/link";
 import DeleteBoardButton from "~/app/_components/delete-board-button";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import EditName from "~/app/(pages)/boards/[id]/settings/edit-name";
+import EditDescription from "~/app/(pages)/boards/[id]/settings/edit-description";
 
 export default async function BoardSettings({
   params: { id },
@@ -51,13 +53,7 @@ export default async function BoardSettings({
           <p className={`mb-3 text-base-content/70`}>
             Change the name of this board.
           </p>
-          <div className={`flex w-full`}>
-            <input
-              className={`input input-bordered mr-4 w-full border-base-content/10`}
-              defaultValue={board.name}
-            />
-            <button className={`btn btn-primary`}>Save</button>
-          </div>
+          <EditName name={board.name} id={board.id} />
         </div>
       </div>
       <div
@@ -68,13 +64,7 @@ export default async function BoardSettings({
           <p className={`mb-3 text-base-content/70`}>
             Change the description of this board.
           </p>
-          <div className={`flex w-full items-center`}>
-            <textarea
-              className={`textarea textarea-bordered mr-4 w-full border-base-content/10`}
-              defaultValue={board.description ? board.description : ""}
-            />
-            <button className={`btn btn-primary`}>Save</button>
-          </div>
+          <EditDescription description={board.description} id={board.id} />
         </div>
       </div>
       <div

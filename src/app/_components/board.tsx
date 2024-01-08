@@ -24,7 +24,7 @@ const Draggable = dynamic(
   { ssr: false },
 );
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { FaPencilAlt, FaPlus, FaMinus } from "react-icons/fa";
 import { toast } from "sonner";
 import { CiCirclePlus } from "react-icons/ci";
@@ -33,6 +33,7 @@ import Link from "next/link";
 import { IoIosSettings } from "react-icons/io";
 import { MdDoneOutline } from "react-icons/md";
 import { type DropResult } from "react-beautiful-dnd";
+import { useRouter } from "next/navigation";
 
 type Column = {
   id: string;
@@ -60,6 +61,8 @@ export default function Board({
   className?: string;
   editable?: boolean;
 }) {
+  const router = useRouter();
+
   const [mode, setMode] = useState<"view" | "edit">("view");
 
   const [columns, setColumns] = useState<Column[]>(data);
@@ -70,6 +73,31 @@ export default function Board({
   const createColumn = api.column.create.useMutation();
   const createRow = api.row.create.useMutation();
   const updateColumn = api.row.updateColumn.useMutation();
+  const deleteColumn = api.column.delete.useMutation();
+
+  useEffect(() => {
+    if (createColumn.isSuccess) {
+      router.refresh();
+    }
+  }, []);
+
+  const handleRemoveColumn = () => {
+    if (!selectedColumn) {
+      return;
+    }
+
+    deleteColumn.mutate({
+      columnId: selectedColumn.id,
+    });
+
+    const newColumns = [...columns];
+    newColumns.splice(
+      newColumns.findIndex((column) => column.id === selectedColumn.id),
+      1,
+    );
+
+    setColumns(newColumns);
+  };
 
   const handleCreateRow = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -139,7 +167,7 @@ export default function Board({
       });
     }
 
-    setColumns([...columns, newColumn]);
+    setColumns([newColumn, ...columns]);
     setNewColumnName("");
 
     const modal = document.getElementById(
@@ -327,6 +355,7 @@ export default function Board({
                       ) : (
                         <div
                           onClick={() => {
+                            setSelectedColumn(column);
                             const modal = document.getElementById(
                               "removed_column_modal",
                             )! as HTMLDialogElement;
@@ -443,11 +472,16 @@ export default function Board({
           <div className="modal-box">
             <h3 className="mb-2 text-lg font-bold">Remove column</h3>
             <p className={`mb-5 text-sm text-base-content/70`}>
-              Are you sure you want to remove this column?
+              Are you sure you want to remove the column "
+              {selectedColumn?.title}"?
             </p>
             <div className={`modal-action`}>
               <form method="dialog">
-                <button className="btn btn-error mr-2" type={"submit"}>
+                <button
+                  className="btn btn-error mr-2"
+                  type={"submit"}
+                  onClick={handleRemoveColumn}
+                >
                   Remove
                 </button>
               </form>

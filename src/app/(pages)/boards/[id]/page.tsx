@@ -1,6 +1,8 @@
 import { api } from "~/trpc/server";
 import Link from "next/link";
 import Board from "~/app/_components/board";
+import { getServerAuthSession } from "~/server/auth";
+import { redirect } from "next/navigation";
 
 export default async function BoardPage({
   params: { id },
@@ -9,11 +11,14 @@ export default async function BoardPage({
     id: string;
   };
 }) {
+  const session = await getServerAuthSession();
   const board = await api.board.fetch.query({
     boardId: id,
   });
 
-  if (!board)
+  if (!session) return redirect("/auth/signin");
+
+  if (!board || board.creatorId !== session.user.id)
     return (
       <div
         className={`flex min-h-[90dvh] flex-col items-center justify-center`}

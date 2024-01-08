@@ -57,31 +57,36 @@ export default async function Home() {
     <main
       className={`md:snap h-screen snap-mandatory overflow-y-auto md:snap-y`}
     >
-      <div className="flex min-h-[75dvh] snap-start flex-col items-center justify-center">
-        <h1
-          className={`flex flex-col items-center justify-center text-[min(8vw,2.5rem)] font-bold hover:cursor-default sm:flex-row`}
-        >
-          Welcome to{" "}
-          <span className={`ml-4 text-[min(12vw,4rem)] text-accent`}>
-            TasqBoard
-          </span>
-        </h1>
-        <StaggeredText
-          text={`Manage your tasks with ease and simplicity. . .`}
-          className={`mb-10 hover:cursor-default`}
-          fontSize={`1.3rem`}
-        />
-        <div className={`w-full max-w-sm px-4`}>
-          <Link
-            href={"/auth/signup"}
-            className={`btn btn-outline w-full hover:scale-105`}
-          >
-            Get started
-          </Link>
+      <div className="flex min-h-[100dvh] snap-start flex-col items-center justify-center">
+        <div className="relative flex w-full flex-grow items-center justify-center bg-base-100 bg-grid-orange-600/[0.1]">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-base-100 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+          <div className={`flex flex-col items-center justify-center`}>
+            <h1
+              className={`flex flex-col items-center justify-center text-[min(8vw,2.5rem)] font-bold hover:cursor-default sm:flex-row`}
+            >
+              Welcome to{" "}
+              <span className={`ml-4 text-[min(12vw,4rem)] text-accent`}>
+                TasqBoard
+              </span>
+            </h1>
+            <StaggeredText
+              text={`Manage your tasks with ease and simplicity. . .`}
+              className={`mb-10 hover:cursor-default`}
+              fontSize={`1.3rem`}
+            />
+            <div className={`w-full max-w-sm px-4`}>
+              <Link
+                href={"/auth/signup"}
+                className={`btn btn-outline w-full hover:scale-105`}
+              >
+                Get started
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       <div
-        className={`mb-32 grid min-h-[40dvh] snap-center grid-cols-1 items-center gap-6 bg-base-200 p-4 py-12 text-center md:grid-cols-3`}
+        className={`mb-32 grid min-h-[40dvh] snap-center grid-cols-1 items-center gap-12 bg-base-200 p-4 py-12 text-center md:grid-cols-3`}
       >
         <div
           className={`group flex h-full flex-col items-center justify-center`}

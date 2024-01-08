@@ -2,6 +2,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { columns } from "~/server/db/schema";
 import { v4 } from "uuid";
+import { eq } from "drizzle-orm";
 
 export const columnRouter = createTRPCRouter({
   create: protectedProcedure
@@ -21,5 +22,15 @@ export const columnRouter = createTRPCRouter({
       });
 
       return columnId;
+    }),
+
+  delete: protectedProcedure
+    .input(
+      z.object({
+        columnId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.delete(columns).where(eq(columns.id, input.columnId));
     }),
 });

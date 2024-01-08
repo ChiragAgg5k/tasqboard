@@ -57,4 +57,36 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.db.delete(boards).where(eq(boards.id, input.boardId));
     }),
+
+  updateName: protectedProcedure
+    .input(
+      z.object({
+        boardId: z.string(),
+        boardName: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .update(boards)
+        .set({
+          name: input.boardName,
+        })
+        .where(eq(boards.id, input.boardId));
+    }),
+
+  updateDescription: protectedProcedure
+    .input(
+      z.object({
+        boardId: z.string(),
+        boardDescription: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .update(boards)
+        .set({
+          description: input.boardDescription,
+        })
+        .where(eq(boards.id, input.boardId));
+    }),
 });

@@ -56,10 +56,7 @@ export default function SignInForm() {
           ) : error === "NotAuthenticated" ? (
             <p>Please sign in to continue.</p>
           ) : error === "OAuthAccountNotLinked" ? (
-            <p>
-              An account with that email address already exists. Please sign in
-              with Google.
-            </p>
+            <p>Please sign in using the same method you used previously.</p>
           ) : (
             <p>An unknown error occurred. Please try again.</p>
           )}
