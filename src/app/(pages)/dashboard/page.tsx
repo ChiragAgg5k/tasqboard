@@ -3,7 +3,7 @@ import NewBoardButton from "~/app/(pages)/dashboard/new-board";
 import { api } from "~/trpc/server";
 import Link from "next/link";
 import HandleUrlToast from "~/app/_components/handle-url-toast";
-import DemoCalendar from "~/app/_components/demo-calendar";
+import Calendar from "~/app/_components/calendar";
 
 export default async function Dashboard() {
   const session = await getServerAuthSession();
@@ -42,12 +42,15 @@ export default async function Dashboard() {
 
       <hr className={`my-10 border-base-content/20`} />
 
-      <h3 className={`mb-8 text-xl font-bold text-base-content/80`}>
-        Calendar and events
+      <h3 className={`mb-3 text-xl font-bold text-base-content/80`}>
+        Calendar View
       </h3>
+      <p className={`mb-8 text-base-content/70`}>
+        All your tasks scheduled with due dates will appear here.
+      </p>
       <div className={`mb-16 flex items-center justify-center`}>
         <div className={`w-[90vw]`}>
-          <DemoCalendar />
+          <Calendar events={[]} />
         </div>
       </div>
 

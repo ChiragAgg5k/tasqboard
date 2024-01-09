@@ -2,13 +2,12 @@
 import dayGridPlugin from "@fullcalendar/daygrid";
 import FullCalendar from "@fullcalendar/react";
 
-const events = [
-  { title: "Meeting", start: new Date() },
-  { title: "Final Exam", start: Date.now() + 86400000 * 6 },
-  { title: "Dinner with friends", start: Date.now() + 86400000 * 10 },
-];
+export type Event = {
+  title: string;
+  start: Date;
+};
 
-export default function DemoCalendar() {
+export default function Calendar({ events }: { events: Event[] }) {
   return (
     <FullCalendar
       headerToolbar={false}

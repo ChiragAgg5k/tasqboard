@@ -46,7 +46,7 @@ export default async function BoardSettings({
         </Link>
       </div>
       <div
-        className={`flex items-center justify-between rounded-xl border p-6`}
+        className={`flex items-center justify-between rounded-xl border border-base-content/10 p-6 shadow-lg`}
       >
         <div className={`w-full`}>
           <h3 className={`mb-1 text-xl font-bold`}>Edit Board Name</h3>
@@ -57,7 +57,7 @@ export default async function BoardSettings({
         </div>
       </div>
       <div
-        className={`flex items-center justify-between rounded-xl border p-6`}
+        className={`flex items-center justify-between rounded-xl border border-base-content/10 p-6 shadow-lg`}
       >
         <div className={`w-full`}>
           <h3 className={`mb-1 text-xl font-bold`}>Edit Board Description</h3>
@@ -68,7 +68,7 @@ export default async function BoardSettings({
         </div>
       </div>
       <div
-        className={`flex items-center justify-between rounded-xl border p-6`}
+        className={`flex items-center justify-between rounded-xl border border-error/50 p-6 shadow-lg`}
       >
         <div>
           <h3 className={`mb-2 text-xl font-bold`}>Delete board</h3>

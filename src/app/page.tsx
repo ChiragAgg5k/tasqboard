@@ -10,7 +10,7 @@ import { FaCheck } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import { GiProgression } from "react-icons/gi";
 import { redirect } from "next/navigation";
-import DemoCalendar from "~/app/_components/demo-calendar";
+import Calendar, { type Event } from "~/app/_components/calendar";
 
 const linkHover =
   "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";
@@ -44,6 +44,12 @@ const exampleColumns = [
       { id: "7", content: "Connected with me on LinkedIn, righttt?" },
     ],
   },
+];
+
+const exampleEvents: Event[] = [
+  { title: "Meeting", start: new Date() },
+  { title: "Final Exam", start: new Date(Date.now() + 86400000 * 6) },
+  { title: "Dinner with friends", start: new Date(Date.now() + 86400000 * 10) },
 ];
 
 export default async function Home() {
@@ -164,8 +170,8 @@ export default async function Home() {
             className={`mb-8 hover:cursor-default`}
           />
         </h4>
-        <div className={`w-[70vw]`}>
-          <DemoCalendar />
+        <div className={`w-full max-w-[46rem]`}>
+          <Calendar events={exampleEvents} />
         </div>
       </div>
       <footer className="footer snap-start bg-base-200 p-10 text-base-content">
@@ -196,7 +202,7 @@ export default async function Home() {
         <aside className="grid-flow-col items-center">
           <p>
             <span className={`font-bold`}>ChiragAgg5k</span> <br />
-            Learning new things since 2004
+            Learning new things since 2022
           </p>
         </aside>
         <nav className="md:place-self-center md:justify-self-end">

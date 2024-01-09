@@ -34,7 +34,6 @@ export default function EditDescription({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
     if (newDescription === description) {
       toast.error("The new name cannot be the same as the old name.");
@@ -46,10 +45,12 @@ export default function EditDescription({
       return;
     }
 
-    if (newDescription.length > 500) {
+    if (newDescription.length > 255) {
       toast.error("The new name cannot be longer than 500 characters.");
       return;
     }
+
+    setLoading(true);
 
     editDescription.mutate({ boardId: id, boardDescription: newDescription });
   };

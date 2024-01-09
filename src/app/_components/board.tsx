@@ -25,7 +25,7 @@ const Draggable = dynamic(
 );
 
 import { type FormEvent, useEffect, useState } from "react";
-import { FaPencilAlt, FaPlus, FaMinus } from "react-icons/fa";
+import { FaPencilAlt, FaPlus, FaMinus, FaCheck } from "react-icons/fa";
 import { toast } from "sonner";
 import { CiCirclePlus } from "react-icons/ci";
 import { api } from "~/trpc/react";
@@ -33,7 +33,6 @@ import Link from "next/link";
 import { IoIosSettings } from "react-icons/io";
 import { MdDoneOutline } from "react-icons/md";
 import { type DropResult } from "react-beautiful-dnd";
-import { useRouter } from "next/navigation";
 
 type Column = {
   id: string;
@@ -61,7 +60,7 @@ export default function Board({
   className?: string;
   editable?: boolean;
 }) {
-  const router = useRouter();
+  const [updates, setUpdates] = useState(0);
 
   const [mode, setMode] = useState<"view" | "edit">("view");
 
@@ -77,9 +76,23 @@ export default function Board({
 
   useEffect(() => {
     if (createColumn.isSuccess) {
-      router.refresh();
+      setUpdates(updates - 1);
     }
-  }, []);
+    if (createRow.isSuccess) {
+      setUpdates(updates - 1);
+    }
+    if (updateColumn.isSuccess) {
+      setUpdates(updates - 1);
+    }
+    if (deleteColumn.isSuccess) {
+      setUpdates(updates - 1);
+    }
+  }, [
+    createColumn.isSuccess,
+    createRow.isSuccess,
+    deleteColumn.isSuccess,
+    updateColumn.isSuccess,
+  ]);
 
   const handleRemoveColumn = () => {
     if (!selectedColumn) {
@@ -89,6 +102,7 @@ export default function Board({
     deleteColumn.mutate({
       columnId: selectedColumn.id,
     });
+    setUpdates(updates + 1);
 
     const newColumns = [...columns];
     newColumns.splice(
@@ -132,6 +146,7 @@ export default function Board({
         columnId: selectedColumn.id,
         content: newRowContent,
       });
+      setUpdates(updates + 1);
     }
 
     setColumns(newColumns);
@@ -150,8 +165,8 @@ export default function Board({
       return toast.error("Column name must be less than 50 characters.");
     }
 
-    if (newColumnName.length < 5) {
-      return toast.error("Column name must be at least 5 characters.");
+    if (newColumnName.length < 4) {
+      return toast.error("Column name must be at least 4 characters.");
     }
 
     const newColumn: Column = {
@@ -165,6 +180,7 @@ export default function Board({
         boardId: boardId,
         columnName: newColumnName,
       });
+      setUpdates(updates + 1);
     }
 
     setColumns([newColumn, ...columns]);
@@ -210,6 +226,7 @@ export default function Board({
           columnId: destination.droppableId,
           rowId: sourceRow.id,
         });
+        setUpdates(updates + 1);
       }
 
       return setColumns(
@@ -283,6 +300,7 @@ export default function Board({
         columnId: destination.droppableId,
         rowId: sourceRow.id,
       });
+      setUpdates(updates + 1);
     }
   };
 
@@ -296,7 +314,7 @@ export default function Board({
               {description ? description : "No description provided."}
             </p>
           </div>
-          <div>
+          <div className={`flex items-center justify-center`}>
             <button
               className={`ghost btn mr-4`}
               onClick={() => setMode(mode === "view" ? "edit" : "view")}
@@ -331,7 +349,7 @@ export default function Board({
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 shadow-lg`}
+                    className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 pb-12 shadow-lg`}
                   >
                     <div
                       className={`relative mb-4 flex items-center justify-center`}
@@ -375,19 +393,19 @@ export default function Board({
                       >
                         {(provided) => (
                           <div
-                            className={`relative my-2 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
+                            className={`relative my-4 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             ref={provided.innerRef}
                           >
                             {row.content}
-                            {mode === "edit" && (
-                              <div
-                                className={`btn btn-ghost btn-sm absolute right-2 top-[0.7rem]`}
-                              >
-                                <FaMinus className={`text-base-content/50`} />
-                              </div>
-                            )}
+                            {/*{mode === "edit" && (*/}
+                            {/*  <div*/}
+                            {/*    className={`btn btn-ghost btn-sm absolute right-2 top-[0.7rem]`}*/}
+                            {/*  >*/}
+                            {/*    <FaMinus className={`text-base-content/50`} />*/}
+                            {/*  </div>*/}
+                            {/*)}*/}
                           </div>
                         )}
                       </Draggable>
@@ -415,6 +433,30 @@ export default function Board({
             </button>
           )}
         </div>
+
+        {editable && (
+          <div
+            className={`flex items-center justify-end text-sm text-base-content/50`}
+          >
+            {updates === 0 ? (
+              <p className={`btn btn-sm fixed bottom-8 right-8`}>
+                Saved
+                <FaCheck className={`inline-block text-base-content/50`} />
+              </p>
+            ) : (
+              <p
+                className={`btn btn-sm fixed bottom-8 right-8 animate-pulse`}
+                onClick={() => {
+                  toast.error(
+                    "Likely there was an error saving your changes. Please try refreshing the page.",
+                  );
+                }}
+              >
+                Saving...
+              </p>
+            )}
+          </div>
+        )}
 
         <dialog id="new_row_modal" className="modal">
           <div className="modal-box">
