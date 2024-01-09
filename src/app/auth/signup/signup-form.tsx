@@ -160,8 +160,10 @@ export default function SignUpForm() {
             setPassword(e.target.value);
             setPasswordStrength(checkPasswordStrength(e.target.value));
           }}
+          autoComplete={`new-password`}
           id={`password`}
           name={`password`}
+          required
         />
         <div
           className={`btn btn-ghost btn-sm absolute right-2 top-2 text-lg`}

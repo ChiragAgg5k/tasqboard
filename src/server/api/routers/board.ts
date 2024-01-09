@@ -25,9 +25,17 @@ export const boardRouter = createTRPCRouter({
       return boardId;
     }),
 
-  fetchAll: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.query.boards.findMany({});
-  }),
+  fetchAll: protectedProcedure
+    .input(
+      z.object({
+        creatorId: z.string(),
+      }),
+    )
+    .query(async ({ ctx }) => {
+      return ctx.db.query.boards.findMany({
+        where: eq(boards.creatorId, ctx.session.user.id),
+      });
+    }),
 
   fetch: protectedProcedure
     .input(

@@ -12,7 +12,9 @@ export default async function Dashboard() {
     return;
   }
 
-  const boards = await api.board.fetchAll.query();
+  const boards = await api.board.fetchAll.query({
+    creatorId: session.user.id,
+  });
 
   return (
     <div className={`px-6 pt-8`}>

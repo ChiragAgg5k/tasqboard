@@ -6,7 +6,17 @@ const DragDropContext = dynamic(
     const mod = await import("react-beautiful-dnd");
     return mod.DragDropContext;
   },
-  { ssr: false },
+  {
+    ssr: false,
+    loading: () => (
+      <p
+        className={`col-span-3 flex min-h-[50dvh] w-full items-center justify-center text-base-content/70`}
+      >
+        <TbLoader3 className={`mr-2 inline-block animate-spin`} />
+        Loading...
+      </p>
+    ),
+  },
 );
 
 const Droppable = dynamic(
@@ -36,6 +46,7 @@ import { type DropResult } from "react-beautiful-dnd";
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TbLoader3 } from "react-icons/tb";
 
 type Column = {
   id: string;
@@ -66,6 +77,7 @@ export default function Board({
   const [updates, setUpdates] = useState(0);
 
   const [mode, setMode] = useState<"view" | "edit">("view");
+  const [showDueDateSelector, setShowDueDateSelector] = useState(false);
 
   const [columns, setColumns] = useState<Column[]>(data);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
@@ -116,9 +128,7 @@ export default function Board({
     setColumns(newColumns);
   };
 
-  const handleCreateRow = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleCreateRow = () => {
     if (newRowContent.length > 500) {
       return toast.error("Row content must be less than 500 characters.");
     }
@@ -423,23 +433,23 @@ export default function Board({
                 )}
               </Droppable>
             ))}
-          </DragDropContext>
 
-          {editable && (
-            <button
-              onClick={() => {
-                const modal = document.getElementById(
-                  "new_column_modal",
-                )! as HTMLDialogElement;
-                modal.showModal();
-              }}
-              className={`group flex h-52 items-center justify-center rounded-xl border border-base-content/10 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content/50 focus:outline-none`}
-            >
-              <CiCirclePlus
-                className={`text-4xl text-base-content/50 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
-              />
-            </button>
-          )}
+            {editable && (
+              <button
+                onClick={() => {
+                  const modal = document.getElementById(
+                    "new_column_modal",
+                  )! as HTMLDialogElement;
+                  modal.showModal();
+                }}
+                className={`group flex h-52 items-center justify-center rounded-xl border border-base-content/10 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content/50 focus:outline-none`}
+              >
+                <CiCirclePlus
+                  className={`text-4xl text-base-content/50 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
+                />
+              </button>
+            )}
+          </DragDropContext>
         </div>
 
         {editable && (
@@ -472,31 +482,86 @@ export default function Board({
             <p className={`mb-5 text-sm text-base-content/70`}>
               Describe the task you want to add to the column{" "}
             </p>
-            <form onSubmit={handleCreateRow}>
-              <input
-                type="text"
-                className={`input input-bordered w-full`}
-                placeholder="Task description"
-                id={`task-description`}
-                name={`task-description`}
-                onChange={(e) => setNewRowContent(e.target.value)}
-                value={newRowContent}
-              />
-              <div className={`flex items-center justify-between pt-4`}>
-                <DatePicker
-                  className={`rounded bg-gray-100`}
-                  slotProps={{
-                    popper: {
-                      placement: "bottom-end",
-                      disablePortal: true,
-                    },
-                  }}
-                />
-                <div className={``}>
-                  <button className="btn btn-accent">Create</button>
+            <input
+              type="text"
+              className={`input input-bordered w-full`}
+              placeholder="Task description"
+              id={`task-description`}
+              name={`task-description`}
+              onChange={(e) => setNewRowContent(e.target.value)}
+              value={newRowContent}
+            />
+            <div className={`flex items-center justify-end pt-6`}>
+              {showDueDateSelector ? (
+                <div className={`w-full`}>
+                  <hr className={`my-4 border-base-content/20`} />
+                  <div className={`flex items-center justify-center`}>
+                    <div className={`mr-4`}>
+                      <p className={`mb-2 text-sm text-base-content/70`}>
+                        Start date
+                      </p>
+                      <DatePicker
+                        className={`rounded bg-gray-100`}
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                          },
+                          popper: {
+                            placement: "bottom-end",
+                            disablePortal: true,
+                          },
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <p className={`mb-2 text-sm text-base-content/70`}>
+                        Due date
+                      </p>
+                      <DatePicker
+                        className={`rounded bg-gray-100`}
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                          },
+                          popper: {
+                            placement: "bottom-end",
+                            disablePortal: true,
+                          },
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className={`flex w-full items-center justify-end pt-6`}>
+                    <div>
+                      <button
+                        className={`btn mr-4`}
+                        onClick={() => setShowDueDateSelector(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="btn btn-accent"
+                        onClick={handleCreateRow}
+                      >
+                        Create
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </form>
+              ) : (
+                <div>
+                  <button
+                    className={`btn mr-4`}
+                    onClick={() => setShowDueDateSelector(true)}
+                  >
+                    Add due date
+                  </button>
+                  <button className="btn btn-accent" onClick={handleCreateRow}>
+                    Create
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           <form method="dialog" className="modal-backdrop">
             <button className={`hover:cursor-default`}>close</button>
