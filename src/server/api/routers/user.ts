@@ -5,7 +5,7 @@ import { v4 } from "uuid";
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
 import { env } from "~/env";
-import { VerificationEmail } from "~/app/_components/verification-email";
+import { VerificationEmail } from "~/components/verification-email";
 import bycrpt from "bcryptjs";
 
 const resend = new Resend(env.RESEND_API_KEY);

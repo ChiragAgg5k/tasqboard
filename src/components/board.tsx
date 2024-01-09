@@ -33,6 +33,9 @@ import Link from "next/link";
 import { IoIosSettings } from "react-icons/io";
 import { MdDoneOutline } from "react-icons/md";
 import { type DropResult } from "react-beautiful-dnd";
+import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type Column = {
   id: string;
@@ -314,9 +317,11 @@ export default function Board({
               {description ? description : "No description provided."}
             </p>
           </div>
-          <div className={`flex items-center justify-center`}>
+          <div
+            className={`flex flex-col-reverse items-center justify-center sm:flex-row`}
+          >
             <button
-              className={`ghost btn mr-4`}
+              className={`ghost btn sm:mr-4`}
               onClick={() => setMode(mode === "view" ? "edit" : "view")}
             >
               {mode === "view" ? (
@@ -329,7 +334,10 @@ export default function Board({
                 />
               )}
             </button>
-            <Link href={`/boards/${boardId}/settings`} className={`ghost btn`}>
+            <Link
+              href={`/boards/${boardId}/settings`}
+              className={`ghost btn mb-4 sm:mb-0`}
+            >
               <IoIosSettings
                 className={`text-2xl text-base-content/70 md:text-3xl`}
               />
@@ -338,7 +346,7 @@ export default function Board({
         </div>
       )}
 
-      <div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div
           className={`grid grid-cols-1 gap-8 rounded-md py-8 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
         >
@@ -459,7 +467,7 @@ export default function Board({
         )}
 
         <dialog id="new_row_modal" className="modal">
-          <div className="modal-box">
+          <div className="modal-box overflow-visible">
             <h3 className="mb-2 text-lg font-bold">Add new task</h3>
             <p className={`mb-5 text-sm text-base-content/70`}>
               Describe the task you want to add to the column{" "}
@@ -474,8 +482,19 @@ export default function Board({
                 onChange={(e) => setNewRowContent(e.target.value)}
                 value={newRowContent}
               />
-              <div className={`modal-action`}>
-                <button className="btn btn-accent">Create</button>
+              <div className={`flex items-center justify-between pt-4`}>
+                <DatePicker
+                  className={`rounded bg-gray-100`}
+                  slotProps={{
+                    popper: {
+                      placement: "bottom-end",
+                      disablePortal: true,
+                    },
+                  }}
+                />
+                <div className={``}>
+                  <button className="btn btn-accent">Create</button>
+                </div>
               </div>
             </form>
           </div>
@@ -544,7 +563,7 @@ export default function Board({
             <button className={`hover:cursor-default`}>close</button>
           </form>
         </dialog>
-      </div>
+      </LocalizationProvider>
     </>
   );
 }

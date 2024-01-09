@@ -1,16 +1,16 @@
 import { getServerAuthSession } from "~/server/auth";
 import Link from "next/link";
-import StaggeredText from "~/app/_components/staggered-text";
+import StaggeredText from "~/components/staggered-text";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGlobe } from "react-icons/fa";
-import HandleUrlToast from "~/app/_components/handle-url-toast";
-import Board from "~/app/_components/board";
+import HandleUrlToast from "~/components/handle-url-toast";
+import Board from "~/components/board";
 import { FaCheck } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 import { GiProgression } from "react-icons/gi";
 import { redirect } from "next/navigation";
-import Calendar, { type Event } from "~/app/_components/calendar";
+import Calendar, { type Event } from "~/components/calendar";
 
 const linkHover =
   "relative w-fit block after:block after:content-[''] after:absolute after:h-[1px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left hover:cursor-pointer";

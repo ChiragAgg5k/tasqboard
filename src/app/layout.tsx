@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { Montserrat } from "next/font/google";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
-import Navbar from "~/app/_components/navbar";
+import Navbar from "~/components/navbar";
 import { Toaster } from "sonner";
 import { type ReactNode } from "react";
 import NextTopLoader from "nextjs-toploader";

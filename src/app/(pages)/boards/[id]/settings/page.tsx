@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
 import Link from "next/link";
-import DeleteBoardButton from "~/app/_components/delete-board-button";
+import DeleteBoardButton from "~/components/delete-board-button";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import EditName from "~/app/(pages)/boards/[id]/settings/edit-name";
 import EditDescription from "~/app/(pages)/boards/[id]/settings/edit-description";
@@ -68,7 +68,7 @@ export default async function BoardSettings({
         </div>
       </div>
       <div
-        className={`flex items-center justify-between rounded-xl border border-error/50 p-6 shadow-lg`}
+        className={`flex flex-col items-center justify-between rounded-xl border border-error/50 p-6 shadow-lg sm:flex-row`}
       >
         <div>
           <h3 className={`mb-2 text-xl font-bold`}>Delete board</h3>
@@ -77,7 +77,7 @@ export default async function BoardSettings({
             cannot be undone.
           </p>
         </div>
-        <DeleteBoardButton boardId={id} />
+        <DeleteBoardButton boardId={id} className={`ml-auto mt-4 sm:mt-0`} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
 import Link from "next/link";
-import Board from "~/app/_components/board";
+import Board from "~/components/board";
 import { getServerAuthSession } from "~/server/auth";
 import { redirect } from "next/navigation";
 

@@ -1,4 +1,4 @@
-import RedirectLink from "~/app/_components/redirect-link";
+import RedirectLink from "~/components/redirect-link";
 
 export default function NotFound() {
   return (

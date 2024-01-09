@@ -2,8 +2,8 @@ import { getServerAuthSession } from "~/server/auth";
 import NewBoardButton from "~/app/(pages)/dashboard/new-board";
 import { api } from "~/trpc/server";
 import Link from "next/link";
-import HandleUrlToast from "~/app/_components/handle-url-toast";
-import Calendar from "~/app/_components/calendar";
+import HandleUrlToast from "~/components/handle-url-toast";
+import Calendar from "~/components/calendar";
 
 export default async function Dashboard() {
   const session = await getServerAuthSession();
