@@ -148,7 +148,6 @@ export default async function Home() {
         <div className={`w-full sm:px-6 md:px-8`}>
           <Board
             boardId={undefined}
-            className={`w-full`}
             data={exampleColumns}
             editable={false}
             name={"Example Board"}

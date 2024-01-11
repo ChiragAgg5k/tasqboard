@@ -37,7 +37,6 @@ const Draggable = dynamic(
 import { type FormEvent, useEffect, useState } from "react";
 import { FaPencilAlt, FaPlus, FaMinus, FaCheck } from "react-icons/fa";
 import { toast } from "sonner";
-import { CiCirclePlus } from "react-icons/ci";
 import { api } from "~/trpc/react";
 import Link from "next/link";
 import { IoIosSettings } from "react-icons/io";
@@ -64,14 +63,12 @@ export default function Board({
   name,
   description = null,
   data,
-  className = "",
   editable = true,
 }: {
   boardId: string | undefined;
   name: string;
   description: string | null;
   data: Column[];
-  className?: string;
   editable?: boolean;
 }) {
   const [updates, setUpdates] = useState(0);
@@ -208,6 +205,7 @@ export default function Board({
 
   const handleDrop = (results: DropResult) => {
     const { source, destination } = results;
+    console.log(results);
 
     if (!destination) {
       return;
@@ -331,7 +329,7 @@ export default function Board({
             className={`flex flex-col-reverse items-center justify-center sm:flex-row`}
           >
             <button
-              className={`ghost btn sm:mr-4`}
+              className={`ghost btn sm:mr-2`}
               onClick={() => setMode(mode === "view" ? "edit" : "view")}
             >
               {mode === "view" ? (
@@ -343,6 +341,17 @@ export default function Board({
                   className={`text-2xl text-base-content/70 md:text-3xl`}
                 />
               )}
+            </button>
+            <button
+              className={`ghost btn mb-2 sm:mb-0 sm:mr-4`}
+              onClick={() => {
+                const modal = document.getElementById(
+                  "new_column_modal",
+                )! as HTMLDialogElement;
+                modal.showModal();
+              }}
+            >
+              <FaPlus className={`text-2xl text-base-content/70 md:text-3xl`} />
             </button>
             <Link
               href={`/boards/${boardId}/settings`}
@@ -357,98 +366,108 @@ export default function Board({
       )}
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div
-          className={`grid grid-cols-1 gap-8 rounded-md py-8 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
-        >
+        <div>
           <DragDropContext onDragEnd={handleDrop}>
-            {columns.map((column, index) => (
-              <Droppable droppableId={column.id} type="group" key={index}>
-                {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 pb-12 shadow-lg`}
-                  >
-                    <div
-                      className={`relative mb-4 flex items-center justify-center`}
+            <Droppable
+              droppableId={`board`}
+              type={`column`}
+              direction={`horizontal`}
+            >
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`grid grid-cols-1 gap-8 rounded-md py-8 sm:grid-cols-2 lg:grid-cols-3`}
+                >
+                  {columns.map((column, index) => (
+                    <Draggable
+                      key={column.id}
+                      draggableId={column.id}
+                      index={index}
                     >
-                      <h3 className={`text-center text-xl font-bold`}>
-                        {column.title}
-                      </h3>
-                      {mode === "view" ? (
+                      {(provided) => (
                         <div
-                          className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
-                          onClick={() => {
-                            setSelectedColumn(column);
-                            const modal = document.getElementById(
-                              "new_row_modal",
-                            )! as HTMLDialogElement;
-                            modal.showModal();
-                          }}
+                          className={`relative`}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
                         >
-                          <FaPlus />
-                        </div>
-                      ) : (
-                        <div
-                          onClick={() => {
-                            setSelectedColumn(column);
-                            const modal = document.getElementById(
-                              "removed_column_modal",
-                            )! as HTMLDialogElement;
-                            modal.showModal();
-                          }}
-                          className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
-                        >
-                          <FaMinus />
+                          <Droppable
+                            droppableId={column.id}
+                            type="group"
+                            key={index}
+                          >
+                            {(provided) => (
+                              <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 pb-12 shadow-lg`}
+                              >
+                                <div
+                                  className={`relative mb-4 flex items-center justify-center`}
+                                >
+                                  <h3
+                                    className={`text-center text-xl font-bold`}
+                                  >
+                                    {column.title}
+                                  </h3>
+                                  {mode === "view" ? (
+                                    <div
+                                      className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
+                                      onClick={() => {
+                                        setSelectedColumn(column);
+                                        const modal = document.getElementById(
+                                          "new_row_modal",
+                                        )! as HTMLDialogElement;
+                                        modal.showModal();
+                                      }}
+                                    >
+                                      <FaPlus />
+                                    </div>
+                                  ) : (
+                                    <div
+                                      onClick={() => {
+                                        setSelectedColumn(column);
+                                        const modal = document.getElementById(
+                                          "removed_column_modal",
+                                        )! as HTMLDialogElement;
+                                        modal.showModal();
+                                      }}
+                                      className={`btn btn-ghost btn-sm absolute right-0 ml-2`}
+                                    >
+                                      <FaMinus />
+                                    </div>
+                                  )}
+                                </div>
+                                {column.rows.map((row, index) => (
+                                  <Draggable
+                                    key={row.id}
+                                    draggableId={row.id}
+                                    index={index}
+                                  >
+                                    {(provided) => (
+                                      <div
+                                        className={`relative my-4 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        ref={provided.innerRef}
+                                      >
+                                        {row.content}
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
                         </div>
                       )}
-                    </div>
-                    {column.rows.map((row, index) => (
-                      <Draggable
-                        key={row.id}
-                        draggableId={row.id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            className={`relative my-4 rounded-md border border-base-content/20 p-4 text-sm hover:shadow-md`}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                          >
-                            {row.content}
-                            {/*{mode === "edit" && (*/}
-                            {/*  <div*/}
-                            {/*    className={`btn btn-ghost btn-sm absolute right-2 top-[0.7rem]`}*/}
-                            {/*  >*/}
-                            {/*    <FaMinus className={`text-base-content/50`} />*/}
-                            {/*  </div>*/}
-                            {/*)}*/}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            ))}
-
-            {editable && (
-              <button
-                onClick={() => {
-                  const modal = document.getElementById(
-                    "new_column_modal",
-                  )! as HTMLDialogElement;
-                  modal.showModal();
-                }}
-                className={`group flex h-52 items-center justify-center rounded-xl border border-base-content/10 bg-base-200 transition-all duration-300 ease-in-out hover:border-base-content/50 focus:outline-none`}
-              >
-                <CiCirclePlus
-                  className={`text-4xl text-base-content/50 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-base-content`}
-                />
-              </button>
-            )}
+                    </Draggable>
+                  ))}
+                </div>
+              )}
+            </Droppable>
           </DragDropContext>
         </div>
 
