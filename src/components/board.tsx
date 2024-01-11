@@ -203,7 +203,7 @@ export default function Board({
     modal.close();
   };
 
-  const handleDrop = (results: DropResult) => {
+  const handleDropRow = (results: DropResult) => {
     const { source, destination } = results;
     console.log(results);
 
@@ -277,7 +277,7 @@ export default function Board({
       setColumns(newColumns);
       return;
     }
-    // remove source row
+
     const newSourceRows = [...sourceColumn.rows];
     newSourceRows.splice(source.index, 1);
 
@@ -315,6 +315,34 @@ export default function Board({
     }
   };
 
+  const handleDrop = (results: DropResult) => {
+    if (results.type === "column") {
+      const { source, destination } = results;
+
+      if (!destination) {
+        return;
+      }
+
+      if (
+        source.droppableId === destination.droppableId &&
+        source.index === destination.index
+      ) {
+        return;
+      }
+
+      const newColumns = [...columns];
+      const column = newColumns.splice(source.index, 1)[0];
+
+      if (!column) return;
+
+      newColumns.splice(destination.index, 0, column);
+
+      setColumns(newColumns);
+    } else {
+      handleDropRow(results);
+    }
+  };
+
   return (
     <>
       {editable && (
@@ -333,13 +361,17 @@ export default function Board({
               onClick={() => setMode(mode === "view" ? "edit" : "view")}
             >
               {mode === "view" ? (
-                <FaPencilAlt
-                  className={`text-2xl text-base-content/70 md:text-3xl`}
-                />
+                <div className="tooltip tooltip-bottom" data-tip="Edit Columns">
+                  <FaPencilAlt
+                    className={`text-2xl text-base-content/70 md:text-3xl`}
+                  />
+                </div>
               ) : (
-                <MdDoneOutline
-                  className={`text-2xl text-base-content/70 md:text-3xl`}
-                />
+                <div className="tooltip tooltip-bottom" data-tip="Done">
+                  <MdDoneOutline
+                    className={`text-2xl text-base-content/70 md:text-3xl`}
+                  />
+                </div>
               )}
             </button>
             <button
@@ -351,15 +383,21 @@ export default function Board({
                 modal.showModal();
               }}
             >
-              <FaPlus className={`text-2xl text-base-content/70 md:text-3xl`} />
+              <div className="tooltip tooltip-bottom" data-tip="Add Column">
+                <FaPlus
+                  className={`text-2xl text-base-content/70 md:text-3xl`}
+                />
+              </div>
             </button>
             <Link
               href={`/boards/${boardId}/settings`}
               className={`ghost btn mb-4 sm:mb-0`}
             >
-              <IoIosSettings
-                className={`text-2xl text-base-content/70 md:text-3xl`}
-              />
+              <div className="tooltip tooltip-bottom" data-tip="Settings">
+                <IoIosSettings
+                  className={`text-2xl text-base-content/70 md:text-3xl`}
+                />
+              </div>
             </Link>
           </div>
         </div>
@@ -401,7 +439,7 @@ export default function Board({
                               <div
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
-                                className={`min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 pb-12 shadow-lg`}
+                                className={`h-full min-h-[10rem] w-full rounded-xl border border-base-content/10 p-6 pb-12 shadow-lg`}
                               >
                                 <div
                                   className={`relative mb-4 flex items-center justify-center`}
@@ -422,7 +460,12 @@ export default function Board({
                                         modal.showModal();
                                       }}
                                     >
-                                      <FaPlus />
+                                      <div
+                                        className="tooltip tooltip-top"
+                                        data-tip="Add Task"
+                                      >
+                                        <FaPlus />
+                                      </div>
                                     </div>
                                   ) : (
                                     <div
@@ -465,6 +508,20 @@ export default function Board({
                       )}
                     </Draggable>
                   ))}
+
+                  {columns.length === 0 && (
+                    <div
+                      className={`col-span-3 flex min-h-[50dvh] flex-row items-center justify-center text-base-content/80`}
+                    >
+                      Wow, such{" "}
+                      <span
+                        className={`ml-1 inline-block font-bold text-base-content/70`}
+                      >
+                        empty
+                      </span>
+                      .
+                    </div>
+                  )}
                 </div>
               )}
             </Droppable>
