@@ -1,5 +1,16 @@
 "use client";
 import dynamic from "next/dynamic";
+import { type FormEvent, useEffect, useState } from "react";
+import { FaCheck, FaMinus, FaPencilAlt, FaPlus } from "react-icons/fa";
+import { toast } from "sonner";
+import { api } from "~/trpc/react";
+import Link from "next/link";
+import { IoIosSettings } from "react-icons/io";
+import { MdDoneOutline } from "react-icons/md";
+import { type DropResult } from "react-beautiful-dnd";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TbLoader3 } from "react-icons/tb";
 
 const DragDropContext = dynamic(
   async () => {
@@ -34,19 +45,6 @@ const Draggable = dynamic(
   { ssr: false },
 );
 
-import { type FormEvent, useEffect, useState } from "react";
-import { FaPencilAlt, FaPlus, FaMinus, FaCheck } from "react-icons/fa";
-import { toast } from "sonner";
-import { api } from "~/trpc/react";
-import Link from "next/link";
-import { IoIosSettings } from "react-icons/io";
-import { MdDoneOutline } from "react-icons/md";
-import { type DropResult } from "react-beautiful-dnd";
-import { DatePicker } from "@mui/x-date-pickers";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TbLoader3 } from "react-icons/tb";
-
 type Column = {
   id: string;
   title: string;
@@ -78,6 +76,7 @@ export default function Board({
 
   const [columns, setColumns] = useState<Column[]>(data);
   const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
+  const [selectedRow, setSelectedRow] = useState<Row | null>(null);
   const [newColumnName, setNewColumnName] = useState<string>("");
   const [newRowContent, setNewRowContent] = useState<string>("");
 
@@ -85,6 +84,7 @@ export default function Board({
   const createRow = api.row.create.useMutation();
   const updateColumn = api.row.updateColumn.useMutation();
   const deleteColumn = api.column.delete.useMutation();
+  const deleteRow = api.row.delete.useMutation();
 
   useEffect(() => {
     if (createColumn.isSuccess) {
@@ -99,10 +99,15 @@ export default function Board({
     if (deleteColumn.isSuccess) {
       setUpdates(updates - 1);
     }
+
+    if (deleteRow.isSuccess) {
+      setUpdates(updates - 1);
+    }
   }, [
     createColumn.isSuccess,
     createRow.isSuccess,
     deleteColumn.isSuccess,
+    deleteRow.isSuccess,
     updateColumn.isSuccess,
   ]);
 
@@ -120,6 +125,29 @@ export default function Board({
     newColumns.splice(
       newColumns.findIndex((column) => column.id === selectedColumn.id),
       1,
+    );
+
+    setColumns(newColumns);
+  };
+
+  const handleRemoveRow = () => {
+    if (!selectedColumn || !selectedRow) {
+      return;
+    }
+
+    deleteRow.mutate({
+      rowId: selectedRow.id,
+    });
+    setUpdates(updates + 1);
+
+    const newColumns = [...columns];
+    newColumns.splice(
+      newColumns.findIndex((column) => column.id === selectedColumn.id),
+      1,
+      {
+        ...selectedColumn,
+        rows: selectedColumn.rows.filter((row) => row.id !== selectedRow.id),
+      },
     );
 
     setColumns(newColumns);
@@ -494,6 +522,14 @@ export default function Board({
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                         ref={provided.innerRef}
+                                        onClick={() => {
+                                          setSelectedColumn(column);
+                                          setSelectedRow(row);
+                                          const modal = document.getElementById(
+                                            "row_info_modal",
+                                          )! as HTMLDialogElement;
+                                          modal.showModal();
+                                        }}
                                       >
                                         {row.content}
                                       </div>
@@ -697,6 +733,40 @@ export default function Board({
                 }}
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button className={`hover:cursor-default`}>close</button>
+          </form>
+        </dialog>
+
+        <dialog id="row_info_modal" className="modal">
+          <div className="modal-box">
+            <h3 className="mb-2 text-lg font-bold">Task Details</h3>
+            <p className={`mb-5 text-sm text-base-content/70`}>
+              {selectedRow?.content}
+            </p>
+            <div className={`modal-action`}>
+              <form method="dialog">
+                <button
+                  className="btn btn-error btn-sm mr-2"
+                  type={"submit"}
+                  onClick={handleRemoveRow}
+                >
+                  Remove
+                </button>
+              </form>
+              <button
+                className="btn btn-sm"
+                onClick={() => {
+                  const modal = document.getElementById(
+                    "row_info_modal",
+                  )! as HTMLDialogElement;
+                  modal.close();
+                }}
+              >
+                Close
               </button>
             </div>
           </div>

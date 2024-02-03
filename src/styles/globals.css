@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 html[data-theme="business"] {
-    --fc-border-color: #525252;
+  --fc-border-color: #525252;
 }
