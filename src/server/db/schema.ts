@@ -92,17 +92,6 @@ export const verificationTokens = mysqlTable(
   }),
 );
 
-// type Column = {
-//     id: string;
-//     title: string;
-//     rows: Row[];
-// };
-//
-// type Row = {
-//     id: string;
-//     content: string;
-// };
-
 export const boards = mysqlTable(
   "board",
   {
@@ -130,6 +119,7 @@ export const columns = mysqlTable(
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     title: varchar("title", { length: 255 }).notNull(),
     boardId: varchar("boardId", { length: 255 }).notNull(),
+    order: int("order").notNull().default(0),
   },
   (column) => ({
     boardIdIdx: index("boardId_idx").on(column.boardId),
@@ -147,6 +137,7 @@ export const rows = mysqlTable(
     id: varchar("id", { length: 255 }).notNull().primaryKey(),
     content: varchar("content", { length: 255 }).notNull(),
     columnId: varchar("columnId", { length: 255 }).notNull(),
+    order: int("order").notNull().default(0),
   },
   (row) => ({
     columnIdIdx: index("columnId_idx").on(row.columnId),

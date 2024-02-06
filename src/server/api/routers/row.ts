@@ -47,4 +47,18 @@ export const rowRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.db.delete(rows).where(eq(rows.id, input.rowId));
     }),
+
+  updateOrder: protectedProcedure
+    .input(
+      z.object({
+        rowId: z.string(),
+        order: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .update(rows)
+        .set({ order: input.order })
+        .where(eq(rows.id, input.rowId));
+    }),
 });

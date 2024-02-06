@@ -34,14 +34,19 @@ export default async function BoardPage({
       </div>
     );
 
-  const columns = board.columns.map((column) => ({
-    id: column.id,
-    title: column.title,
-    rows: column.rows.map((row) => ({
-      id: row.id,
-      content: row.content,
-    })),
-  }));
+  const columns = board.columns
+    .sort((a, b) => a.order - b.order)
+    .map((column) => ({
+      id: column.id,
+      title: column.title,
+      rows: column.rows
+        .sort((a, b) => a.order - b.order)
+        .map((row) => ({
+          id: row.id,
+          content: row.content,
+          order: row.order,
+        })),
+    }));
 
   return (
     <div className={`p-8`}>

@@ -37,6 +37,7 @@ const Droppable = dynamic(
   },
   { ssr: false },
 );
+
 const Draggable = dynamic(
   async () => {
     const mod = await import("react-beautiful-dnd");
@@ -54,6 +55,7 @@ type Column = {
 type Row = {
   id: string;
   content: string;
+  order?: number;
 };
 
 export default function Board({
@@ -85,6 +87,8 @@ export default function Board({
   const updateColumn = api.row.updateColumn.useMutation();
   const deleteColumn = api.column.delete.useMutation();
   const deleteRow = api.row.delete.useMutation();
+  const updateRowOrder = api.row.updateOrder.useMutation();
+  const updateColumnOrder = api.column.updateOrder.useMutation();
 
   useEffect(() => {
     if (createColumn.isSuccess) {
@@ -103,12 +107,22 @@ export default function Board({
     if (deleteRow.isSuccess) {
       setUpdates(updates - 1);
     }
+
+    if (updateRowOrder.isSuccess) {
+      setUpdates(updates - 1);
+    }
+
+    if (updateColumnOrder.isSuccess) {
+      setUpdates(updates - 1);
+    }
   }, [
     createColumn.isSuccess,
     createRow.isSuccess,
     deleteColumn.isSuccess,
     deleteRow.isSuccess,
     updateColumn.isSuccess,
+    updateRowOrder.isSuccess,
+    updateColumnOrder.isSuccess,
   ]);
 
   const handleRemoveColumn = () => {
@@ -233,7 +247,6 @@ export default function Board({
 
   const handleDropRow = (results: DropResult) => {
     const { source, destination } = results;
-    console.log(results);
 
     if (!destination) {
       return;
@@ -266,6 +279,12 @@ export default function Board({
           rowId: sourceRow.id,
         });
         setUpdates(updates + 1);
+
+        updateRowOrder.mutate({
+          rowId: sourceRow.id,
+          order: destination.index,
+        });
+        setUpdates(updates + 1);
       }
 
       return setColumns(
@@ -290,6 +309,18 @@ export default function Board({
     if (!sourceRow || !destinationRow) return;
 
     if (sourceColumn.id === destinationColumn.id) {
+      updateRowOrder.mutate({
+        rowId: sourceRow.id,
+        order: destination.index,
+      });
+      setUpdates(updates + 1);
+
+      updateRowOrder.mutate({
+        rowId: destinationRow.id,
+        order: source.index,
+      });
+      setUpdates(updates + 1);
+
       const newRows = [...sourceColumn.rows];
       newRows.splice(source.index, 1);
       newRows.splice(destination.index, 0, sourceRow);
@@ -340,6 +371,18 @@ export default function Board({
         rowId: sourceRow.id,
       });
       setUpdates(updates + 1);
+
+      updateRowOrder.mutate({
+        rowId: sourceRow.id,
+        order: destination.index,
+      });
+      setUpdates(updates + 1);
+
+      updateColumn.mutate({
+        columnId: source.droppableId,
+        rowId: destinationRow.id,
+      });
+      setUpdates(updates + 1);
     }
   };
 
@@ -360,8 +403,22 @@ export default function Board({
 
       const newColumns = [...columns];
       const column = newColumns.splice(source.index, 1)[0];
+      const destinationColumnId = newColumns[destination.index]?.id;
 
-      if (!column) return;
+      if (!column || !destinationColumnId) return;
+
+      if (boardId) {
+        updateColumnOrder.mutate({
+          columnId: column.id,
+          order: destination.index,
+        });
+        setUpdates(updates + 1);
+
+        updateColumnOrder.mutate({
+          columnId: destinationColumnId,
+          order: source.index,
+        });
+      }
 
       newColumns.splice(destination.index, 0, column);
 

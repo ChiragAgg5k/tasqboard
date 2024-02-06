@@ -33,4 +33,18 @@ export const columnRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.db.delete(columns).where(eq(columns.id, input.columnId));
     }),
+
+  updateOrder: protectedProcedure
+    .input(
+      z.object({
+        columnId: z.string(),
+        order: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .update(columns)
+        .set({ order: input.order })
+        .where(eq(columns.id, input.columnId));
+    }),
 });
